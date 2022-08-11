@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>OxyPlot</RootNamespace>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Version>2.1.0.1</Version>
+    <Authors>BobLd, OxyPlot</Authors>
+    <Company />
+    <Description>OxyPlot is a plotting library for .NET. This is an unofficial library for cartography and maps plotting.</Description>
+    <PackageProjectUrl>https://github.com/BobLd/oxyplot-cartography</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/BobLd/oxyplot-cartography</RepositoryUrl>
+    <PackageTags>plotting, plot, charting, chart, oxyplot, map, cartography</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OxyPlot.Core" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Series\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

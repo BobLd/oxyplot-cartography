@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OxyPlot.Core.Cartography", "OxyPlot.Core.Cartography\OxyPlot.Core.Cartography.csproj", "{CC56D361-F1AC-4787-855A-4C02AD8223CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{0D30406C-6795-4378-90A6-00C6554495E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Avalonia", "Avalonia", "{46489483-130B-43D4-9368-FA9B5539B3EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SimpleDemo", "SimpleDemo", "{397B28C7-26CC-4F11-8D56-7A3C43547C94}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDemo", "SimpleDemo\SimpleDemo.csproj", "{BF9B493B-3883-45A3-AE5A-B3F6171E0AB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC56D361-F1AC-4787-855A-4C02AD8223CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC56D361-F1AC-4787-855A-4C02AD8223CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC56D361-F1AC-4787-855A-4C02AD8223CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC56D361-F1AC-4787-855A-4C02AD8223CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF9B493B-3883-45A3-AE5A-B3F6171E0AB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF9B493B-3883-45A3-AE5A-B3F6171E0AB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF9B493B-3883-45A3-AE5A-B3F6171E0AB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF9B493B-3883-45A3-AE5A-B3F6171E0AB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{46489483-130B-43D4-9368-FA9B5539B3EA} = {0D30406C-6795-4378-90A6-00C6554495E3}
+		{397B28C7-26CC-4F11-8D56-7A3C43547C94} = {46489483-130B-43D4-9368-FA9B5539B3EA}
+		{BF9B493B-3883-45A3-AE5A-B3F6171E0AB1} = {397B28C7-26CC-4F11-8D56-7A3C43547C94}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {91D4962B-BDCA-40E4-9EEF-E689266B0498}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SimpleDemo.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:oxy="http://oxyplot.org/avalonia"
+		xmlns:oxyC="using:OxyPlot"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="SimpleDemo.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="SimpleDemo">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+	
+	<Grid>
+		<oxy:PlotView DataContext="{Binding MapViewModel}"
+					  Model="{Binding MapPlotView}"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch">
+			<oxy:PlotView.DefaultTrackerTemplate>
+				<ControlTemplate>
+					<oxy:TrackerControl Position="{Binding Position}"
+										LineExtents="{Binding LineExtents}"
+										BorderBrush="Transparent"
+										Background="White">
+						<oxy:TrackerControl.Content>
+							<!--<charts:PropertyListingTrackerView/>-->
+						</oxy:TrackerControl.Content>
+					</oxy:TrackerControl>
+				</ControlTemplate>
+			</oxy:PlotView.DefaultTrackerTemplate>
+
+			<oxy:PlotView.Controller>
+				<oxyC:MapPlotController/>
+			</oxy:PlotView.Controller>
+		</oxy:PlotView>
+	</Grid>
+	
+</Window>
