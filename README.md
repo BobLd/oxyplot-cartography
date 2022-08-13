@@ -1,5 +1,5 @@
 # OxyPlot.Cartography
-![OpenStreetMap example](https://github.com/BobLd/oxyplot-cartography/blob/master/Images/example-openstreetmap.png)
+![example-openstreetmap](https://user-images.githubusercontent.com/38405645/184510801-c255316f-6dbb-4955-a064-c2b744c3cb28.png)
 
 # Usage
 The below example is implemented using Avalonia, but it will be very similar for other platforms.
@@ -74,7 +74,8 @@ using (var streamImg = asset.Open(loadingImg))
 
 ## Map Tiles
 ### MapTileAnnotation
-![arcgisonline example](https://github.com/BobLd/oxyplot-cartography/blob/master/Images/example-arcgisonline-sat.png)
+![example-arcgisonline-sat](https://user-images.githubusercontent.com/38405645/184510820-e1616724-46e5-46a8-8169-fa408bb26d8d.png)
+
 
 #### Usage
 ```csharp
@@ -114,8 +115,8 @@ Map tiles are rendered as true squares, axis is not linear. You can use it in co
 > Most of OSM, including the main tiling system, uses a Pseudo-Mercator projection where the Earth is modelized as if it was a perfect a sphere. Combined with the zoom level, the system is known as a Web Mercator on Wikipedia.<br>
 > This produces a fast approximation to the truer, but heavier elliptical projection, where the Earth would be projected on a more accurate ellipsoid (flattened on poles). As a consequence, direct mesurements of distances in this projection will be approximative, except on the Equator, and the aspect ratios on the rendered map for true squares measured on the surface on Earth will slightly change with latitude and angles not so precisely preserved by this spherical projection.
 https://wiki.openstreetmap.org/wiki/Mercator
+![example-openstreetmap-latitude-mercator-axis](https://user-images.githubusercontent.com/38405645/184510844-ef039e92-198f-471c-bfd1-b7c141aa2995.png)
 
-![Latitude Mercator Axis example](https://github.com/BobLd/oxyplot-cartography/blob/master/Images/example-openstreetmap-latitude-mercator-axis.png)
 
 #### Usage
 ```csharp
@@ -130,7 +131,7 @@ model.Axes.Add(new LatitudeWebMercatorAxis
 
 ### LinearAxis
 When using the basic Oxyplot `LinearAxis`, the map tiles are not rendered as true squares.
-![Linear Axis example](https://github.com/BobLd/oxyplot-cartography/blob/master/Images/example-openstreetmap-linear-axis.png)
+![example-openstreetmap-linear-axis](https://user-images.githubusercontent.com/38405645/184510852-5003c17e-4b7d-4de7-a248-1855a3fcb014.png)
 
 ## Data
 ### LocalTileMapImageProvider
