@@ -124,7 +124,6 @@ namespace SimpleDemo.ViewModels
                 });
             }
 
-
             return model;
         }
     }
