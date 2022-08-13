@@ -63,13 +63,13 @@ namespace SimpleDemo.ViewModels
                 Position = AxisPosition.Left,
                 Minimum = 51.42,
                 Maximum = 51.62,
-                Title = "Latitude"
+                Title = "Latitude",
             });
 
             var tileMapImageProvider = new HttpTileMapImageProvider(SynchronizationContext.Current)
             {
-                //Url = "http://tile.openstreetmap.org/{Z}/{X}/{Y}.png",
-                Url = "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}", // https://developers.arcgis.com/documentation/mapping-apis-and-services/data-hosting/services/image-tile-service/
+                Url = "http://tile.openstreetmap.org/{Z}/{X}/{Y}.png",
+                //Url = "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}", // https://developers.arcgis.com/documentation/mapping-apis-and-services/data-hosting/services/image-tile-service/
                 //Url = "https://maptiles.finncdn.no/tileService/1.0.3/norortho/{Z}/{X}/{Y}.png",
                 //Url = "https://maptiles.finncdn.no/tileService/1.0.3/normap/{Z}/{X}/{Y}.png",
 
@@ -116,7 +116,7 @@ namespace SimpleDemo.ViewModels
                 // Add the tile map annotation
                 model.Annotations.Add(new MapTileAnnotation(streamImg, tileMapImageProvider)
                 {
-                    CopyrightNotice = "OpenStreetMap",
+                    CopyrightNotice = "© OpenStreetMap contributors",
                     MinZoomLevel = 0,
                     MaxZoomLevel = 19, // max OpenStreetMap value
                     IsTileGridVisible = true,

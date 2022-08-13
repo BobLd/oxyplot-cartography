@@ -82,6 +82,106 @@ namespace OxyPlot
         }
 
         /// <summary>
+        /// Converts decimal degrees (DD) to degrees minutes seconds coordinates (DMS).
+        /// <para>
+        /// <see href="https://en.wikipedia.org/wiki/Decimal_degrees"/>
+        /// </para>
+        /// <see href="https://en.wikipedia.org/wiki/ISO_6709#Representation_at_the_human_interface_(Annex_D)"/>
+        /// </summary>
+        /// <param name="decimalDegrees">The decimal degrees (DD) coordinate</param>
+        /// <param name="isLatitude">True if latitude, false if longitude</param>
+        /// <param name="secondsDecimal">Decimal roundings of seconds part</param>
+        /// <returns>The degrees minutes seconds coordinates (DMS), e.g. 50°40′46.461″N</returns>
+        public static string DecimalDegreesToDegreesMinutesSeconds(double decimalDegrees, bool isLatitude, int secondsDecimal)
+        {
+            // see https://en.wikipedia.org/wiki/ISO_6709#Representation_at_the_human_interface_(Annex_D)
+            var card = isLatitude ? (decimalDegrees > 0 ? "N" : "S") : (decimalDegrees > 0 ? "E" : "W");
+            var d = Math.Truncate(decimalDegrees);
+            var delta = Math.Abs(decimalDegrees - d);
+            var m = Math.Truncate(60 * delta);
+            var s = Math.Round(3600.0 * delta - 60.0 * m, secondsDecimal);
+            return $"{Math.Abs(d):00}\u00b0{m:00}\u2032{s:00}\u2033{card}";
+        }
+
+        /// <summary>
+        /// Converts degrees minutes seconds (DMS) to decimal degrees (DD) coordinates.
+        /// <para>
+        /// <see href="https://en.wikipedia.org/wiki/Decimal_degrees"/>
+        /// </para>
+        /// <see href="https://en.wikipedia.org/wiki/ISO_6709#Representation_at_the_human_interface_(Annex_D)"/>
+        /// </summary>
+        /// <param name="degrees"></param>
+        /// <param name="minutes"></param>
+        /// <param name="seconds"></param>
+        /// <param name="cardinal"></param>
+        /// <returns>The decimal degrees (DD) coordinates</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static double DegreesMinutesSecondsToDecimalDegrees(int degrees, int minutes, double seconds, char cardinal)
+        {
+            double sign;
+            if (cardinal.Equals('N') || cardinal.Equals('E'))
+            {
+                sign = 1;
+            }
+            else if (cardinal.Equals('S') || cardinal.Equals('W'))
+            {
+                sign = -1;
+            }
+            else
+            {
+                throw new ArgumentException($"Cardinal value should be either 'N', 'S', 'E' or 'W', but is '{cardinal}'", nameof(cardinal));
+            }
+
+            return (degrees + minutes / 60.0 + seconds / 3600.0) * sign;
+        }
+
+        /// <summary>
+        /// Converts degrees minutes seconds (DMS) to decimal degrees (DD) coordinates.
+        /// <para>
+        /// <see href="https://en.wikipedia.org/wiki/Decimal_degrees"/>
+        /// </para>
+        /// <see href="https://en.wikipedia.org/wiki/ISO_6709#Representation_at_the_human_interface_(Annex_D)"/>
+        /// </summary>
+        /// <param name="degreesMinutesSeconds">
+        /// The degrees minutes seconds coordinate, formated as DD°MM′SS.SSS″C e.g. 38°53′23″N
+        /// <para>
+        /// ° = \u00b0, ′ = \u2032, ″ = \u2033
+        /// </para>
+        /// </param>
+        /// <returns>The decimal degrees (DD) coordinates</returns>
+        public static double DegreesMinutesSecondsToDecimalDegrees(string degreesMinutesSeconds)
+        {
+            var parts = degreesMinutesSeconds.Split('\u00b0', '\u2032', '\u2033');
+            if (parts.Length != 4)
+            {
+                throw new ArgumentException("The coordinate should be in DMS format, i.e. DD°MM′SS.SSS″C", nameof(degreesMinutesSeconds));
+            }
+
+            if (!int.TryParse(parts[0], out int d))
+            {
+                throw new ArgumentException($"Could not parse degrees part, got {parts[0]}. The coordinate should be in DMS format, i.e. DD°MM′SS.SSS″C", nameof(degreesMinutesSeconds));
+            }
+
+            if (!int.TryParse(parts[1], out int m))
+            {
+                throw new ArgumentException($"Could not parse minutes part, got {parts[1]}. The coordinate should be in DMS format, i.e. DD°MM′SS.SSS″C", nameof(degreesMinutesSeconds));
+            }
+
+            if (!double.TryParse(parts[2], out double s))
+            {
+                throw new ArgumentException($"Could not parse seconds part, got {parts[2]}. The coordinate should be in DMS format, i.e. DD°MM′SS.SSS″C", nameof(degreesMinutesSeconds));
+            }
+
+            var card = parts[3];
+            if (card.Length != 1)
+            {
+                throw new ArgumentException($"Could not parse cardinal part, got {parts[3]}. The coordinate should be in DMS format, i.e. DD°MM′SS.SSS″C", nameof(degreesMinutesSeconds));
+            }
+
+            return DegreesMinutesSecondsToDecimalDegrees(d, m, s, card[0]);
+        }
+
+        /// <summary>
         /// Generate the storage path from a uri.
         /// </summary>
         /// <param name="uri">The uri to generate the storage path</param>
