@@ -95,11 +95,11 @@ namespace OxyPlot
         public static string DecimalDegreesToDegreesMinutesSeconds(double decimalDegrees, bool isLatitude, int secondsDecimal)
         {
             // see https://en.wikipedia.org/wiki/ISO_6709#Representation_at_the_human_interface_(Annex_D)
-            var card = isLatitude ? (decimalDegrees > 0 ? "N" : "S") : (decimalDegrees > 0 ? "E" : "W");
-            var d = Math.Truncate(decimalDegrees);
-            var delta = Math.Abs(decimalDegrees - d);
-            var m = Math.Truncate(60 * delta);
-            var s = Math.Round(3600.0 * delta - 60.0 * m, secondsDecimal);
+            char card = isLatitude ? (decimalDegrees > 0 ? 'N' : 'S') : (decimalDegrees > 0 ? 'E' : 'W');
+            double d = Math.Truncate(decimalDegrees);
+            double delta = Math.Abs(decimalDegrees - d);
+            double m = Math.Truncate(60 * delta);
+            double s = Math.Round(3600.0 * delta - 60.0 * m, secondsDecimal);
             return $"{Math.Abs(d):00}\u00b0{m:00}\u2032{s:00}\u2033{card}";
         }
 

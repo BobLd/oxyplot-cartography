@@ -30,7 +30,7 @@
             AbsoluteMinimum = -_maxValue;
             AbsoluteMaximum = _maxValue;
             Key = "Latitude";
-            StringFormat = "00.0###°";
+            StringFormat = "00.0###°N;00.0###°S";
 
             // Hack as 'UpdateActualMaxMin' method is internal
             _updateActualMaxMinMethod = typeof(Axis).GetMethod("UpdateActualMaxMin",

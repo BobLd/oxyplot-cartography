@@ -15,7 +15,7 @@
             this.AbsoluteMinimum = -_maxDefaultValue;
             this.AbsoluteMaximum = _maxDefaultValue;
             Key = "Longitude";
-            StringFormat = "00.0###°";
+            StringFormat = "00.0###°E;00.0###°W";
         }
 
         /// <summary>
