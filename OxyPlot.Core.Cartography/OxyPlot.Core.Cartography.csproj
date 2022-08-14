@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>OxyPlot</RootNamespace>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>2.1.0.2</Version>
+    <Version>2.1.0.3</Version>
     <Authors>BobLd, OxyPlot</Authors>
     <Company />
     <Description>OxyPlot is a plotting library for .NET. This is an unofficial library for cartography and maps plotting.</Description>
