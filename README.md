@@ -1,4 +1,6 @@
 # OxyPlot.Cartography
+OxyPlot is a plotting library for .NET. This is an **unofficial** library for cartography and maps plotting.
+
 ![example-openstreetmap](https://user-images.githubusercontent.com/38405645/184510801-c255316f-6dbb-4955-a064-c2b744c3cb28.png)
 
 # Usage
@@ -40,20 +42,26 @@ var tileMapImageProvider = new HttpTileMapImageProvider(SynchronizationContext.C
 	Url = "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}",
 	MaxNumberOfDownloads = 2,
 	UserAgent = "OxyPlot.Cartography",
-	ImageConverter = new Func<byte[], byte[]>(input =>
+	ImageConverter = new Func<byte[], byte[]>(bytes => // Optional
 	{
-		// Only convert if file format is Jpeg
-		if (input.Length >= 2 && input[0] == 0xFF && input[1] == 0xD8)
+		if (bytes.Length >= 2 && bytes[0] == 0x42 && bytes[1] == 0x4D)
 		{
-			using (var msInput = new MemoryStream(input))
-			using (var msOutput = new MemoryStream())
-			{
-				var bitmap = Bitmap.DecodeToWidth(msInput, 256);
-				bitmap.Save(msOutput);
-				return msOutput.ToArray();
-			}
+			return bytes; // Bmp
 		}
-		return input;
+
+		if (bytes.Length >= 4 && bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47)
+		{
+			return bytes; //Png
+		}
+
+		using (var msInput = new MemoryStream(bytes))
+		using (var msOutput = new MemoryStream())
+		{
+			var bitmap = Bitmap.DecodeToWidth(msInput, 256);
+			bitmap.Save(msOutput);
+			return msOutput.ToArray();
+		}
+		return bytes;
 	})
 };
 
@@ -188,20 +196,26 @@ var tileMapImageProvider = new HttpTileMapImageProvider(SynchronizationContext.C
 	Url = "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}",
 	MaxNumberOfDownloads = 2,
 	UserAgent = "OxyPlot.Cartography",
-	ImageConverter = new Func<byte[], byte[]>(input =>
+	ImageConverter = new Func<byte[], byte[]>(bytes =>
 	{
-		// Only convert if file format is Jpeg
-		if (input.Length >= 2 && input[0] == 0xFF && input[1] == 0xD8)
+		if (bytes.Length >= 2 && bytes[0] == 0x42 && bytes[1] == 0x4D)
 		{
-			using (var msInput = new MemoryStream(input))
-			using (var msOutput = new MemoryStream())
-			{
-				var bitmap = Bitmap.DecodeToWidth(msInput, 256);
-				bitmap.Save(msOutput);
-				return msOutput.ToArray();
-			}
+			return bytes; // Bmp
 		}
-		return input;
+
+		if (bytes.Length >= 4 && bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47)
+		{
+			return bytes; //Png
+		}
+
+		using (var msInput = new MemoryStream(bytes))
+		using (var msOutput = new MemoryStream())
+		{
+			var bitmap = Bitmap.DecodeToWidth(msInput, 256);
+			bitmap.Save(msOutput);
+			return msOutput.ToArray();
+		}
+		return bytes;
 	})
 };
 ```
