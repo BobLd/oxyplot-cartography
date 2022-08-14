@@ -131,6 +131,34 @@ model.Axes.Add(new LatitudeWebMercatorAxis
 });
 ```
 
+#### Label formating
+##### Default
+e.g. 48.86°N, 02.35°E
+
+##### Degrees Minutes Seconds (DMS) Coordinates System
+e.g. 38°53′23″N, 77°00′32″W
+```csharp
+model.Axes.Add(new LongitudeAxis
+{
+	Position = AxisPosition.Bottom,
+	Minimum = -0.24,
+	Maximum = 0.04,
+	Title = "Longitude",
+	LabelFormatter = (decDegrees) => CartographyHelper.DecimalDegreesToDegreesMinutesSeconds(decDegrees, false, 3)
+});
+
+model.Axes.Add(new LatitudeWebMercatorAxis
+{
+	Position = AxisPosition.Left,
+	Minimum = 51.42,
+	Maximum = 51.62,
+	Title = "Latitude",
+	LabelFormatter = (decDegrees) => CartographyHelper.DecimalDegreesToDegreesMinutesSeconds(decDegrees, true, 3)
+});
+```
+##### Decimal Degrees (DD) Coordinates System
+e.g. 38.8897°, -77.0089° or 38.8897,-77.0089
+
 ### LinearAxis
 When using the basic Oxyplot `LinearAxis`, the map tiles are not rendered as true squares.
 ![example-openstreetmap-linear-axis](https://user-images.githubusercontent.com/38405645/184510852-5003c17e-4b7d-4de7-a248-1855a3fcb014.png)
