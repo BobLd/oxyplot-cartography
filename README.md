@@ -89,6 +89,7 @@ model.Annotations.Add(new MapTileAnnotation(streamImg, tileMapImageProvider)
 });
 ```
 #### Setting a tile loading image
+![loading_images](https://user-images.githubusercontent.com/38405645/184518394-55c89ba6-2a36-4a0a-97f7-e1785dfb5b0f.png)
 
 ##### Usage (Avalonia)
 ```csharp
