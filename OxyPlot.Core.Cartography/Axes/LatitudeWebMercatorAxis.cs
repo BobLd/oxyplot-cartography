@@ -1,7 +1,7 @@
 ﻿namespace OxyPlot.Axes
 {
     /// <summary>
-    /// Represents an axis with Web Mercator latitude scale.
+    /// Represents an axis with Web Mercator latitude scale (Y axis).
     /// <para>
     /// Web Mercator, Google Web Mercator, Spherical Mercator, WGS 84 Web Mercator or WGS 84/Pseudo-Mercator
     /// is a variant of the Mercator map projection and is the de facto standard for Web mapping applications.
@@ -22,6 +22,9 @@
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LatitudeWebMercatorAxis"/> class.
+        /// <para>
+        /// Represents an axis with Web Mercator latitude scale (Y axis).
+        /// </para>
         /// </summary>
         public LatitudeWebMercatorAxis()
         {

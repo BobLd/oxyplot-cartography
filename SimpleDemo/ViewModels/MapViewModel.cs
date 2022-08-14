@@ -6,6 +6,7 @@ using OxyPlot.Annotations;
 using OxyPlot.Axes;
 using OxyPlot.Data;
 using OxyPlot.Legends;
+using OxyPlot.Series;
 using ReactiveUI;
 using System;
 using System.IO;
@@ -68,6 +69,7 @@ namespace SimpleDemo.ViewModels
 
             var tileMapImageProvider = new HttpTileMapImageProvider(SynchronizationContext.Current)
             {
+                //Url = "https://www.metoffice.gov.uk/public/tiles/map/{Z}/{Y}/{X}.png",
                 Url = "http://tile.openstreetmap.org/{Z}/{X}/{Y}.png",
                 //Url = "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}", // https://developers.arcgis.com/documentation/mapping-apis-and-services/data-hosting/services/image-tile-service/
                 //Url = "https://maptiles.finncdn.no/tileService/1.0.3/norortho/{Z}/{X}/{Y}.png",
@@ -75,21 +77,27 @@ namespace SimpleDemo.ViewModels
 
                 MaxNumberOfDownloads = 2,
                 UserAgent = "OxyPlot.Cartography",
-                ImageConverter = new Func<byte[], byte[]>(input =>
+                ImageConverter = new Func<byte[], byte[]>(bytes =>
                 {
-                    // Only convert if file format is Jpeg
                     // https://github.com/oxyplot/oxyplot/blob/205e968870c292ecaeab2cb9e7f34904897126cb/Source/OxyPlot/Imaging/OxyImage.cs#L221
-                    if (input.Length >= 2 && input[0] == 0xFF && input[1] == 0xD8)
+                    if (bytes.Length >= 2 && bytes[0] == 0x42 && bytes[1] == 0x4D)
                     {
-                        using (var msInput = new MemoryStream(input))
-                        using (var msOutput = new MemoryStream())
-                        {
-                            var bitmap = Bitmap.DecodeToWidth(msInput, 256);
-                            bitmap.Save(msOutput);
-                            return msOutput.ToArray();
-                        }
+                        return bytes; // Bmp
                     }
-                    return input;
+
+                    if (bytes.Length >= 4 && bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47)
+                    {
+                        return bytes; //Png
+                    }
+
+                    using (var msInput = new MemoryStream(bytes))
+                    using (var msOutput = new MemoryStream())
+                    {
+                        var bitmap = Bitmap.DecodeToWidth(msInput, 256);
+                        bitmap.Save(msOutput);
+                        return msOutput.ToArray();
+                    }
+                    return bytes;
                 })
             };
 

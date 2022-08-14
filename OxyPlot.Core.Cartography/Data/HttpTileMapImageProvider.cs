@@ -114,7 +114,7 @@ namespace OxyPlot.Data
             {
                 _url = value;
                 var uri = new Uri(_url);
-                _fullStoragePath = CartographyHelper.GetStoragePathFromUri(uri);
+                _fullStoragePath = Path.Combine(BaseStorageFolder, CartographyHelper.GetStoragePathFromUri(uri));
             }
         }
 

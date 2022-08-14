@@ -1,13 +1,21 @@
 ﻿namespace OxyPlot.Axes
 {
     /// <summary>
-    /// Represents an axis with longitude scale.
-    /// https://en.wikipedia.org/wiki/Web_Mercator_projection
+    /// Represents an axis with longitude scale (X axis).
+    /// <para>
+    /// <see href="https://en.wikipedia.org/wiki/Web_Mercator_projection"/>
+    /// </para>
     /// </summary>
     public class LongitudeAxis : LinearAxis
     {
         private const double _maxDefaultValue = 180;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LongitudeAxis"/> class.
+        /// <para>
+        /// Represents an axis with longitude scale (X axis).
+        /// </para>
+        /// </summary>
         public LongitudeAxis() : base()
         {
             this.FilterMinValue = -_maxDefaultValue;
