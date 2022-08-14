@@ -2,6 +2,7 @@
 ![example-openstreetmap](https://user-images.githubusercontent.com/38405645/184510801-c255316f-6dbb-4955-a064-c2b744c3cb28.png)
 
 # Usage
+See the [SimpleDemo](https://github.com/BobLd/oxyplot-cartography/tree/master/SimpleDemo) for more details.
 The below example is implemented using Avalonia, but it will be very similar for other platforms.
 ```csharp
 var model = new PlotModel
