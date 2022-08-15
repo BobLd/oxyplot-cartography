@@ -19,19 +19,6 @@
 					  Model="{Binding MapPlotView}"
 					  HorizontalAlignment="Stretch"
 					  VerticalAlignment="Stretch">
-			<oxy:PlotView.DefaultTrackerTemplate>
-				<ControlTemplate>
-					<oxy:TrackerControl Position="{Binding Position}"
-										LineExtents="{Binding LineExtents}"
-										BorderBrush="Transparent"
-										Background="White">
-						<oxy:TrackerControl.Content>
-							<!--<charts:PropertyListingTrackerView/>-->
-						</oxy:TrackerControl.Content>
-					</oxy:TrackerControl>
-				</ControlTemplate>
-			</oxy:PlotView.DefaultTrackerTemplate>
-
 			<oxy:PlotView.Controller>
 				<oxyC:MapPlotController/>
 			</oxy:PlotView.Controller>

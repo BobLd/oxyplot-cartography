@@ -6,6 +6,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using OxyPlot.Legends;
+
 namespace OxyPlot
 {
     /// <summary>
@@ -100,10 +102,13 @@ namespace OxyPlot
 
             if (actualModel.IsLegendVisible && actualModel.Legends?.Count > 0)
             {
-                foreach (var legend in actualModel.Legends)
+                foreach (var legendBase in actualModel.Legends)
                 {
-                    if (legend?.LegendArea.Contains(e.Position) == true)
+                    if (legendBase?.LegendArea.Contains(e.Position) == true)
                     {
+                        // Do not show tracker if point is in legend
+                        // TODO - issue as sometime the position is NOT seen
+                        // as inside the legend but actually is
                         return;
                     }
                 }

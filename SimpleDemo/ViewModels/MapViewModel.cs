@@ -1,4 +1,7 @@
-﻿using Avalonia;
+﻿using System;
+using System.IO;
+using System.Threading;
+using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using OxyPlot;
@@ -8,9 +11,6 @@ using OxyPlot.Data;
 using OxyPlot.Legends;
 using OxyPlot.Series;
 using ReactiveUI;
-using System;
-using System.IO;
-using System.Threading;
 
 namespace SimpleDemo.ViewModels
 {
@@ -49,6 +49,16 @@ namespace SimpleDemo.ViewModels
                 LegendPosition = LegendPosition.RightTop,
                 LegendBackground = OxyColor.FromAColor(200, OxyColors.White),
                 LegendBorder = OxyColors.Black,
+                IsLegendVisible = true
+            });
+
+            model.Legends.Add(new MapTileLegend
+            {
+                LegendPlacement = LegendPlacement.Inside,
+                LegendPosition = LegendPosition.RightMiddle,
+                LegendBackground = OxyColor.FromAColor(200, OxyColors.White),
+                LegendBorder = OxyColors.Black,
+                IsLegendVisible = true
             });
 
             model.Axes.Add(new LongitudeAxis
@@ -69,9 +79,8 @@ namespace SimpleDemo.ViewModels
                 //LabelFormatter = (decDegrees) => CartographyHelper.DecimalDegreesToDegreesMinutesSeconds(decDegrees, true, 3)
             });
 
-            var tileMapImageProvider = new HttpTileMapImageProvider(SynchronizationContext.Current)
+            var tileMapImageProvider = new HttpTileMapImageProvider(SynchronizationContext.Current!)
             {
-                //Url = "https://www.metoffice.gov.uk/public/tiles/map/{Z}/{Y}/{X}.png",
                 //Url = "https://tile-c.openstreetmap.fr/hot/{Z}/{X}/{Y}.png", // Humanitarian
                 //Url = "https://gps.tile.openstreetmap.org/lines/{Z}/{X}/{Y}.png", // Public GPS trace
                 Url = "http://tile.openstreetmap.org/{Z}/{X}/{Y}.png", // Standard
@@ -102,7 +111,6 @@ namespace SimpleDemo.ViewModels
                         bitmap.Save(msOutput);
                         return msOutput.ToArray();
                     }
-                    return bytes;
                 })
             };
 
@@ -113,19 +121,20 @@ namespace SimpleDemo.ViewModels
                 // Add the tile map annotation
                 model.Annotations.Add(new MapTileAnnotation(streamImg, tileMapImageProvider)
                 {
+                    Title = "Map",
+                    SeriesGroupName = "Background",
                     CopyrightNotice = "© OpenStreetMap contributors",
                     MinZoomLevel = 0,
                     MaxZoomLevel = 19, // max OpenStreetMap value
                     IsTileGridVisible = true,
-                    TileGridThickness = 3
+                    TileGridThickness = 3,
+                    // Layer Wrong documentation in base class
                 });
             }
 
-            /*
             // Public GPS trace
             var tileMapImageProvider2 = new HttpTileMapImageProvider(SynchronizationContext.Current)
             {
-                //Url = "https://www.metoffice.gov.uk/public/tiles/map/{Z}/{Y}/{X}.png",
                 //Url = "https://tile-c.openstreetmap.fr/hot/{Z}/{X}/{Y}.png", // Humanitarian
                 Url = "https://gps.tile.openstreetmap.org/lines/{Z}/{X}/{Y}.png", // Public GPS trace
                 //Url = "http://tile.openstreetmap.org/{Z}/{X}/{Y}.png", // Standard
@@ -162,11 +171,60 @@ namespace SimpleDemo.ViewModels
             // Add the tile map annotation
             model.Annotations.Add(new MapTileAnnotation(tileMapImageProvider2)
             {
+                Title = "Public GPS trace",
+                SeriesGroupName = "Overlays",
                 CopyrightNotice = "© OpenStreetMap contributors",
                 MinZoomLevel = 0,
                 MaxZoomLevel = 19, // max OpenStreetMap value
             });
-            */
+
+            ScatterSeries scatterSeries = new ScatterSeries()
+            {
+                Title = "Some data",
+                RenderInLegend = true,
+                SeriesGroupName = "Group 1"
+            };
+            for (int x = -10; x <= 10; x++)
+            {
+                for (int y = 510; y <= 520; y++)
+                {
+                    scatterSeries.Points.Add(new ScatterPoint(x / 10.0, y / 10.0));
+                }
+            }
+            model.Series.Add(scatterSeries);
+
+            ScatterSeries scatterSeries2 = new ScatterSeries()
+            {
+                Title = "Some data 2",
+                RenderInLegend = true,
+                SeriesGroupName = "Group 1"
+            };
+            for (int x = -11; x <= 11; x++)
+            {
+                for (int y = 510; y <= 520; y++)
+                {
+                    scatterSeries2.Points.Add(new ScatterPoint(x / 11.0, y / 10.0));
+                }
+            }
+
+            model.Series.Add(scatterSeries2);
+
+            ScatterSeries scatterSeries3 = new ScatterSeries()
+            {
+                Title = "Some data 3",
+                RenderInLegend = true,
+                SeriesGroupName = "Group 2",
+                IsVisible = true
+            };
+            for (int x = -12; x <= 12; x++)
+            {
+                for (int y = 520; y <= 530; y++)
+                {
+                    scatterSeries3.Points.Add(new ScatterPoint(x / 10.0, y / 10.0));
+                }
+            }
+
+            model.Series.Add(scatterSeries3);
 
             return model;
         }

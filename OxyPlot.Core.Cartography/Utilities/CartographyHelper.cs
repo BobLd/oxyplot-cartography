@@ -7,6 +7,8 @@ namespace OxyPlot
     /// </summary>
     public static class CartographyHelper
     {
+        public static MapTileApis Apis = new MapTileApis();
+
         /// <summary>
         /// Y to Latitude.
         /// <para>
@@ -212,4 +214,6 @@ namespace OxyPlot
             return path;
         }
     }
+
+
 }

@@ -14,7 +14,7 @@ namespace OxyPlot.Annotations
     /// Provides an annotation that shows a tile based map.
     /// </summary>
     /// <remarks>The longitude and latitude range of the map is defined by the range of the x and y axis, respectively.</remarks>
-    public class MapTileAnnotation : Annotation
+    public class MapTileAnnotation : Annotation, IMapTileAnnotation
     {
         private readonly ITileMapImageProvider _tileMapImageProvider;
 
@@ -69,49 +69,54 @@ namespace OxyPlot.Annotations
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the tile grid is visible. The default is <c>false</c>.
+        /// <inheritdoc/> The default is <c>false</c>.
         /// </summary>
         public bool IsTileGridVisible { get; set; }
 
         /// <summary>
-        /// Gets or sets the color of the tile grid. The default is <c>OxyColors.Black</c>.
+        /// <inheritdoc/> The default is <c>OxyColors.Black</c>.
         /// </summary>
         public OxyColor TileGridColor { get; set; } = OxyColors.Black;
 
         /// <summary>
-        /// Gets or sets the thickness of the tile grid. The default is <c>2</c>.
+        /// <inheritdoc/> The default is <c>2</c>.
         /// </summary>
         public int TileGridThickness { get; set; } = 2;
 
-        /// <summary>
-        /// Gets or sets the copyright notice.
-        /// </summary>
-        /// <value>The copyright notice.</value>
+        /// <inheritdoc/>
         public string? CopyrightNotice { get; set; }
 
-        /// <summary>
-        /// Gets or sets the size of the tiles.
-        /// </summary>
-        /// <value>The size of the tiles.</value>
+        /// <inheritdoc/>
         public int TileSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the min zoom level.
-        /// </summary>
-        /// <value>The min zoom level.</value>
+        /// <inheritdoc/>
         public int MinZoomLevel { get; set; }
 
-        /// <summary>
-        /// Gets or sets the max zoom level.
-        /// </summary>
-        /// <value>The max zoom level.</value>
+        /// <inheritdoc/>
         public int MaxZoomLevel { get; set; }
 
-        /// <summary>
-        /// Gets or sets the opacity.
-        /// </summary>
-        /// <value>The opacity.</value>
+        /// <inheritdoc/>
         public double Opacity { get; set; }
+
+        /// <summary>
+        /// <inheritdoc/> The default is null.
+        /// </summary>
+        public string SeriesGroupName { get; set; }
+
+        /// <summary>
+        /// <inheritdoc/> The default is null.
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// <inheritdoc/> The default is true.
+        /// </summary>
+        public bool RenderInLegend { get; set; } = true;
+
+        /// <summary>
+        /// <inheritdoc/> The default is true.
+        /// </summary>
+        public bool IsVisible { get; set; } = true;
 
         /// <summary>
         /// Renders the annotation on the specified context.
@@ -119,6 +124,11 @@ namespace OxyPlot.Annotations
         /// <param name="rc">The render context.</param>
         public override void Render(IRenderContext rc)
         {
+            if (!IsVisible)
+            {
+                return;
+            }
+
             var lon0 = XAxis.ActualMinimum;
             var lon1 = XAxis.ActualMaximum;
             var lat0 = YAxis.ActualMinimum;
@@ -208,7 +218,7 @@ namespace OxyPlot.Annotations
             {
                 var clippingRectangle = GetClippingRect();
                 var p = new ScreenPoint(clippingRectangle.Right - 5, clippingRectangle.Bottom - 5);
-                //var textSize = rc.MeasureText(CopyrightNotice, ActualFont, ActualFontSize, ActualFontWeight);
+                _ = rc.MeasureText(CopyrightNotice, ActualFont, ActualFontSize, ActualFontWeight); // TODO - Is this necessary?
                 rc.DrawText(p, CopyrightNotice, OxyColors.Black, ActualFont, ActualFontSize, ActualFontWeight,
                             0, HorizontalAlignment.Right, VerticalAlignment.Bottom);
             }
