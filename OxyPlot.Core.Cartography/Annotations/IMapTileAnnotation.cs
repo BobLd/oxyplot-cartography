@@ -54,13 +54,13 @@
         /// Gets or sets the groupname for the map tile annotation.
         /// </summary>
         /// <remarks>This groupname may for e.g. be used by the Legend class to group map tile annotation into separated blocks.</remarks>
-        string AnnotationGroupName { get; set; }
+        string? AnnotationGroupName { get; set; }
 
         /// <summary>
         /// Gets or sets the title of the map tile annotation.
         /// </summary>
         /// <value>The title that is shown in the legend of the plot.</value>
-        string Title { get; set; }
+        string? Title { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the map tile annotation should be rendered in the legend.

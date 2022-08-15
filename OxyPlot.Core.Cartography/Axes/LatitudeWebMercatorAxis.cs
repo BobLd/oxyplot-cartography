@@ -13,11 +13,6 @@
     /// </summary>
     public class LatitudeWebMercatorAxis : Axis
     {
-        /// <summary>
-        /// See https://en.wikipedia.org/wiki/Web_Mercator_projection#WKT_definition
-        /// </summary>
-        private const double _maxValue = 85.05;
-
         private readonly System.Reflection.MethodInfo? _updateActualMaxMinMethod;
 
         /// <summary>
@@ -28,10 +23,10 @@
         /// </summary>
         public LatitudeWebMercatorAxis()
         {
-            FilterMinValue = -_maxValue;
-            FilterMaxValue = _maxValue;
-            AbsoluteMinimum = -_maxValue;
-            AbsoluteMaximum = _maxValue;
+            FilterMinValue = -CartographyHelper.MaxMercatorProjectionLatitude;
+            FilterMaxValue = CartographyHelper.MaxMercatorProjectionLatitude;
+            AbsoluteMinimum = -CartographyHelper.MaxMercatorProjectionLatitude;
+            AbsoluteMaximum = CartographyHelper.MaxMercatorProjectionLatitude;
             Key = "Latitude";
             StringFormat = "00.0###°N;00.0###°S";
 
@@ -198,22 +193,22 @@
         {
             if (double.IsNaN(ActualMinimum) || double.IsInfinity(ActualMinimum))
             {
-                ActualMinimum = -_maxValue;
+                ActualMinimum = -CartographyHelper.MaxMercatorProjectionLatitude;
             }
 
-            if (ActualMinimum <= -_maxValue)
+            if (ActualMinimum <= -CartographyHelper.MaxMercatorProjectionLatitude)
             {
-                ActualMinimum = -_maxValue;
+                ActualMinimum = -CartographyHelper.MaxMercatorProjectionLatitude;
             }
 
             if (double.IsNaN(ActualMaximum) || double.IsInfinity(ActualMaximum))
             {
-                ActualMaximum = _maxValue;
+                ActualMaximum = CartographyHelper.MaxMercatorProjectionLatitude;
             }
 
-            if (ActualMaximum >= _maxValue)
+            if (ActualMaximum >= CartographyHelper.MaxMercatorProjectionLatitude)
             {
-                ActualMaximum = _maxValue;
+                ActualMaximum = CartographyHelper.MaxMercatorProjectionLatitude;
             }
 
             if (ActualMaximum <= ActualMinimum)

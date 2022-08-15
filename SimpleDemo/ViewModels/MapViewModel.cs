@@ -54,6 +54,7 @@ namespace SimpleDemo.ViewModels
 
             model.Legends.Add(new MapTileLegend
             {
+                LegendTitle = "Layers",
                 LegendPlacement = LegendPlacement.Inside,
                 LegendPosition = LegendPosition.RightMiddle,
                 LegendBackground = OxyColor.FromAColor(200, OxyColors.White),

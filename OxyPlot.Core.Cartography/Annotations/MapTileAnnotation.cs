@@ -101,12 +101,12 @@ namespace OxyPlot.Annotations
         /// <summary>
         /// <inheritdoc/> The default is null.
         /// </summary>
-        public string AnnotationGroupName { get; set; }
+        public string? AnnotationGroupName { get; set; }
 
         /// <summary>
         /// <inheritdoc/> The default is null.
         /// </summary>
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         /// <summary>
         /// <inheritdoc/> The default is true.
@@ -150,7 +150,7 @@ namespace OxyPlot.Annotations
                 zoom = MaxZoomLevel;
             }
 
-            double maxXY = Math.Pow(2, zoom); // See https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#X_and_Y
+            int maxXY = (int)Math.Pow(2, zoom); // See https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#X_and_Y
 
             // find tile coordinates for the corners
             CartographyHelper.LatLonToTile(lat0, lon0, zoom, out double x0, out double y0);
@@ -246,7 +246,7 @@ namespace OxyPlot.Annotations
                 OxyColors.Red,
                 OxyColors.Black,
                 1,
-                this.EdgeRenderingMode);
+                EdgeRenderingMode);
         }
 
         private OxyImage? GetImage(int x, int y, int zoom)

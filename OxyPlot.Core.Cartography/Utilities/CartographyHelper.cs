@@ -7,7 +7,25 @@ namespace OxyPlot
     /// </summary>
     public static class CartographyHelper
     {
-        public static MapTileApis Apis = new MapTileApis();
+        /// <summary>
+        /// List of map tiles apis.
+        /// </summary>
+        public static readonly MapTileApis Apis = new MapTileApis();
+
+        /// <summary>
+        /// Top edge is 85.0511°N and bottom edge is 85.0511°S.
+        /// For the curious, the number 85.0511 is the result of arctan(sinh(π)). By using this bound, the entire map becomes a (very large) square.
+        /// <para>See <see href="https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#X_and_Y"/></para>
+        /// See <see href="https://en.wikipedia.org/wiki/Web_Mercator_projection#WKT_definition"/>
+        /// </summary>
+        public const double MaxMercatorProjectionLatitude = 85.0511;
+
+        /// <summary>
+        /// Left edge is 180°W and right edge is 180°E.
+        /// <para>See <see href="https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#X_and_Y"/></para>
+        /// See <see href="https://en.wikipedia.org/wiki/Web_Mercator_projection#WKT_definition"/>
+        /// </summary>
+        public const double MaxLongitude = 180;
 
         /// <summary>
         /// Y to Latitude.

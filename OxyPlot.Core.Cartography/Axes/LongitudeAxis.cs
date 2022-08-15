@@ -8,8 +8,6 @@
     /// </summary>
     public class LongitudeAxis : LinearAxis
     {
-        private const double _maxDefaultValue = 180;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="LongitudeAxis"/> class.
         /// <para>
@@ -18,10 +16,10 @@
         /// </summary>
         public LongitudeAxis() : base()
         {
-            this.FilterMinValue = -_maxDefaultValue;
-            this.FilterMaxValue = _maxDefaultValue;
-            this.AbsoluteMinimum = -_maxDefaultValue;
-            this.AbsoluteMaximum = _maxDefaultValue;
+            this.FilterMinValue = -CartographyHelper.MaxLongitude;
+            this.FilterMaxValue = CartographyHelper.MaxLongitude;
+            this.AbsoluteMinimum = -CartographyHelper.MaxLongitude;
+            this.AbsoluteMaximum = CartographyHelper.MaxLongitude;
             Key = "Longitude";
             StringFormat = "00.0###°E;00.0###°W";
         }
@@ -33,22 +31,22 @@
         {
             if (double.IsNaN(this.ActualMinimum) || double.IsInfinity(this.ActualMinimum))
             {
-                this.ActualMinimum = -_maxDefaultValue;
+                this.ActualMinimum = -CartographyHelper.MaxLongitude;
             }
 
-            if (this.ActualMinimum <= -_maxDefaultValue)
+            if (this.ActualMinimum <= -CartographyHelper.MaxLongitude)
             {
-                this.ActualMinimum = -_maxDefaultValue;
+                this.ActualMinimum = -CartographyHelper.MaxLongitude;
             }
 
             if (double.IsNaN(this.ActualMaximum) || double.IsInfinity(this.ActualMaximum))
             {
-                this.ActualMaximum = _maxDefaultValue;
+                this.ActualMaximum = CartographyHelper.MaxLongitude;
             }
 
-            if (this.ActualMaximum >= _maxDefaultValue)
+            if (this.ActualMaximum >= CartographyHelper.MaxLongitude)
             {
-                this.ActualMaximum = _maxDefaultValue;
+                this.ActualMaximum = CartographyHelper.MaxLongitude;
             }
 
             if (this.ActualMaximum <= this.ActualMinimum)
