@@ -79,16 +79,10 @@ namespace SimpleDemo.ViewModels
                 //LabelFormatter = (decDegrees) => CartographyHelper.DecimalDegreesToDegreesMinutesSeconds(decDegrees, true, 3)
             });
 
+            MapTileApi standardApi = CartographyHelper.Apis.OpenStreetMap.Standard;
             var tileMapImageProvider = new HttpTileMapImageProvider(SynchronizationContext.Current!)
             {
-                //Url = "https://tile-c.openstreetmap.fr/hot/{Z}/{X}/{Y}.png", // Humanitarian
-                //Url = "https://gps.tile.openstreetmap.org/lines/{Z}/{X}/{Y}.png", // Public GPS trace
-                Url = "http://tile.openstreetmap.org/{Z}/{X}/{Y}.png", // Standard
-                //Url = "https://b.tile-cyclosm.openstreetmap.fr/cyclosm/{Z}/{X}/{Y}.png", // CyclOSM
-                //Url = "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}", // https://developers.arcgis.com/documentation/mapping-apis-and-services/data-hosting/services/image-tile-service/
-                //Url = "https://maptiles.finncdn.no/tileService/1.0.3/norortho/{Z}/{X}/{Y}.png",
-                //Url = "https://maptiles.finncdn.no/tileService/1.0.3/normap/{Z}/{X}/{Y}.png",
-
+                Url = standardApi.Url,
                 MaxNumberOfDownloads = 2,
                 UserAgent = "OxyPlot.Cartography",
                 ImageConverter = new Func<byte[], byte[]>(bytes =>
@@ -121,9 +115,9 @@ namespace SimpleDemo.ViewModels
                 // Add the tile map annotation
                 model.Annotations.Add(new MapTileAnnotation(streamImg, tileMapImageProvider)
                 {
-                    Title = "Map",
-                    SeriesGroupName = "Background",
-                    CopyrightNotice = "© OpenStreetMap contributors",
+                    Title = standardApi.Name,
+                    AnnotationGroupName = "Background",
+                    CopyrightNotice = standardApi.CopyrightNotice,
                     MinZoomLevel = 0,
                     MaxZoomLevel = 19, // max OpenStreetMap value
                     IsTileGridVisible = true,
@@ -133,15 +127,10 @@ namespace SimpleDemo.ViewModels
             }
 
             // Public GPS trace
+            MapTileApi gpsTraceApi = CartographyHelper.Apis.OpenStreetMap.PublicGpsTrace;
             var tileMapImageProvider2 = new HttpTileMapImageProvider(SynchronizationContext.Current)
             {
-                //Url = "https://tile-c.openstreetmap.fr/hot/{Z}/{X}/{Y}.png", // Humanitarian
-                Url = "https://gps.tile.openstreetmap.org/lines/{Z}/{X}/{Y}.png", // Public GPS trace
-                //Url = "http://tile.openstreetmap.org/{Z}/{X}/{Y}.png", // Standard
-                //Url = "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}", // https://developers.arcgis.com/documentation/mapping-apis-and-services/data-hosting/services/image-tile-service/
-                //Url = "https://maptiles.finncdn.no/tileService/1.0.3/norortho/{Z}/{X}/{Y}.png",
-                //Url = "https://maptiles.finncdn.no/tileService/1.0.3/normap/{Z}/{X}/{Y}.png",
-
+                Url = gpsTraceApi.Url,
                 MaxNumberOfDownloads = 2,
                 UserAgent = "OxyPlot.Cartography",
                 ImageConverter = new Func<byte[], byte[]>(bytes =>
@@ -171,9 +160,9 @@ namespace SimpleDemo.ViewModels
             // Add the tile map annotation
             model.Annotations.Add(new MapTileAnnotation(tileMapImageProvider2)
             {
-                Title = "Public GPS trace",
-                SeriesGroupName = "Overlays",
-                CopyrightNotice = "© OpenStreetMap contributors",
+                Title = gpsTraceApi.Name,
+                AnnotationGroupName = "Overlays",
+                CopyrightNotice = gpsTraceApi.CopyrightNotice,
                 MinZoomLevel = 0,
                 MaxZoomLevel = 19, // max OpenStreetMap value
             });

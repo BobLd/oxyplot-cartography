@@ -101,7 +101,7 @@ namespace OxyPlot.Annotations
         /// <summary>
         /// <inheritdoc/> The default is null.
         /// </summary>
-        public string SeriesGroupName { get; set; }
+        public string AnnotationGroupName { get; set; }
 
         /// <summary>
         /// <inheritdoc/> The default is null.
@@ -222,6 +222,31 @@ namespace OxyPlot.Annotations
                 rc.DrawText(p, CopyrightNotice, OxyColors.Black, ActualFont, ActualFontSize, ActualFontWeight,
                             0, HorizontalAlignment.Right, VerticalAlignment.Bottom);
             }
+
+            // TODO - Draw scale (1km = xx..)
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="rc">The rendering context.</param>
+        /// <param name="legendBox">The bounding rectangle of the legend box.</param>
+        public void RenderLegend(IRenderContext rc, OxyRect legendBox)
+        {
+            double xmid = (legendBox.Left + legendBox.Right) / 2;
+            double ymid = (legendBox.Top + legendBox.Bottom) / 2;
+
+            var midpt = new ScreenPoint(xmid, ymid);
+
+            rc.DrawMarker(
+                midpt,
+                MarkerType.Square,
+                null,
+                5,
+                OxyColors.Red,
+                OxyColors.Black,
+                1,
+                this.EdgeRenderingMode);
         }
 
         private OxyImage? GetImage(int x, int y, int zoom)

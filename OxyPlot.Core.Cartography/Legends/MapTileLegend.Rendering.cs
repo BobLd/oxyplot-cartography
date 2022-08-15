@@ -239,7 +239,7 @@ namespace OxyPlot.Legends
             double y = rect.Top;
             var maxsize = new OxySize(Math.Max(rect.Width - this.LegendSymbolLength - this.LegendSymbolMargin, 0), rect.Height);
             var actualLegendFontSize = double.IsNaN(this.LegendFontSize) ? this.PlotModel.DefaultFontSize : this.LegendFontSize;
-            var legendTextColor = s.IsVisible ? this.LegendTextColor : this.SeriesInvisibleTextColor;
+            var legendTextColor = s.IsVisible ? this.LegendTextColor : this.AnnotationsInvisibleTextColor;
 
             //rc.SetToolTip(s.ToolTip);
             var textSize = rc.DrawMathText(
@@ -278,9 +278,9 @@ namespace OxyPlot.Legends
                         this.LegendSymbolLength,
                         textSize.Height);
 
-                //s.RenderLegend(rc, symbolRect);
+                s.RenderLegend(rc, symbolRect);
             }
-            rc.SetToolTip(null);
+            //rc.SetToolTip(null);
         }
 
         /// <summary>
@@ -374,18 +374,12 @@ namespace OxyPlot.Legends
             var mapTileAnnotations = this.PlotModel.Annotations.OfType<IMapTileAnnotation>();
             var items = this.LegendItemOrder == LegendItemOrder.Reverse ? mapTileAnnotations.Reverse() : mapTileAnnotations;
 
-            /*
-            var items = this.LegendItemOrder == LegendItemOrder.Reverse
-                ? this.PlotModel.Series.Reverse().Where(s => s.RenderInLegend && s.LegendKey == this.Key)
-                : this.PlotModel.Series.Where(s => s.RenderInLegend && s.LegendKey == this.Key);
-            */
-
-            List<string> itemGroupNames = new List<string>();
+            var itemGroupNames = new List<string>();
             foreach (var s in items)
             {
-                if (!itemGroupNames.Contains(s.SeriesGroupName))
+                if (!itemGroupNames.Contains(s.AnnotationGroupName))
                 {
-                    itemGroupNames.Add(s.SeriesGroupName);
+                    itemGroupNames.Add(s.AnnotationGroupName);
                 }
             }
 
@@ -395,7 +389,7 @@ namespace OxyPlot.Legends
             // When orientation is vertical and alignment is center or right, the items cannot be rendered before
             // the max item width has been calculated. Render the items for each column, and at the end.
             var seriesToRender = new Dictionary<IMapTileAnnotation, OxyRect>();
-            Action renderItems = () =>
+            void renderItems()
             {
                 var usedGroupNames = new List<string>();
                 foreach (var sr in seriesToRender)
@@ -403,19 +397,23 @@ namespace OxyPlot.Legends
                     var itemRect = sr.Value;
                     var itemSeries = sr.Key;
 
-                    if (!string.IsNullOrEmpty(itemSeries.SeriesGroupName) && !usedGroupNames.Contains(itemSeries.SeriesGroupName))
+                    if (!string.IsNullOrEmpty(itemSeries.AnnotationGroupName) && !usedGroupNames.Contains(itemSeries.AnnotationGroupName))
                     {
-                        usedGroupNames.Add(itemSeries.SeriesGroupName);
-                        var groupNameTextSize = rc.MeasureMathText(itemSeries.SeriesGroupName, this.GroupNameFont ?? this.PlotModel.DefaultFont, actualGroupNameFontSize, this.GroupNameFontWeight);
+                        usedGroupNames.Add(itemSeries.AnnotationGroupName);
+                        var groupNameTextSize = rc.MeasureMathText(itemSeries.AnnotationGroupName, this.GroupNameFont ?? this.PlotModel.DefaultFont, actualGroupNameFontSize, this.GroupNameFontWeight);
                         double ypos = itemRect.Top;
                         double xpos = itemRect.Left;
                         if (this.LegendOrientation == LegendOrientation.Vertical)
-                            ypos -= (groupNameTextSize.Height + this.LegendLineSpacing / 2);
+                        {
+                            ypos -= groupNameTextSize.Height + (this.LegendLineSpacing / 2);
+                        }
                         else
-                            xpos -= (groupNameTextSize.Width + this.LegendItemSpacing / 2);
+                        {
+                            xpos -= groupNameTextSize.Width + (this.LegendItemSpacing / 2);
+                        }
                         rc.DrawMathText(
                         new ScreenPoint(xpos, ypos),
-                        itemSeries.SeriesGroupName,
+                        itemSeries.AnnotationGroupName,
                         this.LegendTitleColor.GetActualColor(this.PlotModel.TextColor),
                          this.GroupNameFont ?? this.PlotModel.DefaultFont,
                         actualGroupNameFontSize,
@@ -446,7 +444,7 @@ namespace OxyPlot.Legends
 
                 usedGroupNames.Clear();
                 seriesToRender.Clear();
-            };
+            }
 
             if (!measureOnly)
             {
@@ -455,7 +453,7 @@ namespace OxyPlot.Legends
 
             foreach (var g in itemGroupNames)
             {
-                var itemGroup = items.Where(i => i.SeriesGroupName == g);
+                var itemGroup = items.Where(i => i.AnnotationGroupName == g);
                 var groupNameTextSize = new OxySize(0, 0);
                 if (itemGroup.Any() && !string.IsNullOrEmpty(g))
                 {

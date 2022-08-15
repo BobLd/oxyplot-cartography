@@ -53,7 +53,7 @@ namespace OxyPlot.Legends
 
             this.ShowInvisibleSeries = true;
 
-            this.SeriesInvisibleTextColor = OxyColor.FromAColor(64, this.LegendTextColor);
+            this.AnnotationsInvisibleTextColor = OxyColor.FromAColor(64, this.LegendTextColor);
 
             this.SeriesPosMap = new Dictionary<IMapTileAnnotation, OxyRect>();
 
@@ -88,7 +88,7 @@ namespace OxyPlot.Legends
         /// <summary>
         /// Gets or sets the group name font.
         /// </summary>
-        public string GroupNameFont { get; set; }
+        public string? GroupNameFont { get; set; }
 
         /// <summary>
         /// Gets or sets the group name font size.
@@ -103,9 +103,9 @@ namespace OxyPlot.Legends
         private Dictionary<IMapTileAnnotation, OxyRect> SeriesPosMap { get; set; }
 
         /// <summary>
-        /// Gets or sets the textcolor of invisible series.
+        /// Gets or sets the textcolor of invisible annotations.
         /// </summary>
-        public OxyColor SeriesInvisibleTextColor { get; set; }
+        public OxyColor AnnotationsInvisibleTextColor { get; set; }
 
         /// <summary>
         /// Checks if a screen point is within the legend boundaries.

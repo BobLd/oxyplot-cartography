@@ -51,25 +51,32 @@
         double Opacity { get; set; }
 
         /// <summary>
-        /// Gets or sets the groupname for the Series.
+        /// Gets or sets the groupname for the map tile annotation.
         /// </summary>
-        /// <remarks>This groupname may for e.g. be used by the Legend class to group series into separated blocks.</remarks>
-        string SeriesGroupName { get; set; }
+        /// <remarks>This groupname may for e.g. be used by the Legend class to group map tile annotation into separated blocks.</remarks>
+        string AnnotationGroupName { get; set; }
 
         /// <summary>
-        /// Gets or sets the title of the series.
+        /// Gets or sets the title of the map tile annotation.
         /// </summary>
         /// <value>The title that is shown in the legend of the plot.</value>
         string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the series should be rendered in the legend.
+        /// Gets or sets a value indicating whether the map tile annotation should be rendered in the legend.
         /// </summary>
         bool RenderInLegend { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this series is visible.
+        /// Gets or sets a value indicating whether this map tile annotation is visible.
         /// </summary>
         bool IsVisible { get; set; }
+
+        /// <summary>
+        /// Renders the legend symbol for the map tile annotation on the specified rendering context.
+        /// </summary>
+        /// <param name="rc">The rendering context.</param>
+        /// <param name="legendBox">The bounding rectangle of the legend box.</param>
+        void RenderLegend(IRenderContext rc, OxyRect legendBox);
     }
 }
