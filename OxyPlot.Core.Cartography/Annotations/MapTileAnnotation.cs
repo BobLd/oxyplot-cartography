@@ -126,6 +126,7 @@ namespace OxyPlot.Annotations
         {
             if (!IsVisible)
             {
+                // TODO - Cancel all image loading?
                 return;
             }
 
@@ -134,10 +135,10 @@ namespace OxyPlot.Annotations
             var lat0 = YAxis.ActualMinimum;
             var lat1 = YAxis.ActualMaximum;
 
-            // the desired number of tiles horizontally
+            // The desired number of tiles horizontally
             double tilesx = PlotModel.Width / TileSize;
 
-            // calculate the desired zoom level
+            // Calculate the desired zoom level
             var n = tilesx / (((lon1 + 180) / 360) - ((lon0 + 180) / 360));
             var zoom = (int)Math.Round(Math.Log(n) / Math.Log(2));
             if (zoom < MinZoomLevel)
@@ -152,7 +153,7 @@ namespace OxyPlot.Annotations
 
             int maxXY = (int)Math.Pow(2, zoom); // See https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#X_and_Y
 
-            // find tile coordinates for the corners
+            // Find tile coordinates for the corners
             CartographyHelper.LatLonToTile(lat0, lon0, zoom, out double x0, out double y0);
             CartographyHelper.LatLonToTile(lat1, lon1, zoom, out double x1, out double y1);
 
@@ -192,38 +193,32 @@ namespace OxyPlot.Annotations
                         continue;
                     }
 
-                    // transform from tile coordinates to lat/lon
+                    // Transform from tile coordinates to lat/lon
                     CartographyHelper.TileToLatLon(x, y, zoom, out double latitude0, out double longitude0);
                     CartographyHelper.TileToLatLon(x + 1, y + 1, zoom, out double latitude1, out double longitude1);
 
-                    // transform from lat/lon to screen coordinates
+                    // Transform from lat/lon to screen coordinates
                     var s00 = this.Transform(longitude0, latitude0);
                     var s11 = this.Transform(longitude1, latitude1);
 
                     var r = OxyRect.Create(s00.X, s00.Y, s11.X, s11.Y);
 
-                    // draw the rectangle
+                    // Draw the rectangle
                     if (IsTileGridVisible && TileGridThickness > 0 && !TileGridColor.IsUndefined() && TileGridColor.IsVisible())
                     {
                         rc.DrawRectangle(r, OxyColors.Undefined, TileGridColor, TileGridThickness, EdgeRenderingMode.PreferSpeed);
                     }
 
-                    // draw the image
+                    // Draw the image
                     rc.DrawImage(img, r.Left, r.Top, r.Width, r.Height, Opacity, true);
                 }
             }
 
-            // draw the copyright notice
-            if (!string.IsNullOrEmpty(CopyrightNotice))
-            {
-                var clippingRectangle = GetClippingRect();
-                var p = new ScreenPoint(clippingRectangle.Right - 5, clippingRectangle.Bottom - 5);
-                _ = rc.MeasureText(CopyrightNotice, ActualFont, ActualFontSize, ActualFontWeight); // TODO - Is this necessary?
-                rc.DrawText(p, CopyrightNotice, OxyColors.Black, ActualFont, ActualFontSize, ActualFontWeight,
-                            0, HorizontalAlignment.Right, VerticalAlignment.Bottom);
-            }
+            // Draw the copyright notice
+            RenderCopyrightNotice(rc);
 
-            // TODO - Draw scale (1km = xx..)
+            // Draw the map scale
+            RenderMapScale(rc);
         }
 
         /// <summary>
@@ -247,6 +242,23 @@ namespace OxyPlot.Annotations
                 OxyColors.Black,
                 1,
                 EdgeRenderingMode);
+        }
+
+        private void RenderCopyrightNotice(IRenderContext rc)
+        {
+            if (!string.IsNullOrEmpty(CopyrightNotice))
+            {
+                var clippingRectangle = GetClippingRect();
+                var p = new ScreenPoint(clippingRectangle.Right - 5, clippingRectangle.Bottom - 5);
+                _ = rc.MeasureText(CopyrightNotice, ActualFont, ActualFontSize, ActualFontWeight); // TODO - Is this necessary?
+                rc.DrawText(p, CopyrightNotice, OxyColors.Black, ActualFont, ActualFontSize, ActualFontWeight,
+                            0, HorizontalAlignment.Right, VerticalAlignment.Bottom);
+            }
+        }
+
+        private void RenderMapScale(IRenderContext rc)
+        {
+            // TODO - Draw scale (1km = xx..)
         }
 
         private OxyImage? GetImage(int x, int y, int zoom)
