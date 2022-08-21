@@ -38,7 +38,7 @@ namespace OxyPlot.Series
         }
 
         /// <summary>
-        /// 
+        /// Compute Terminator line (day / night).
         /// </summary>
         /// <param name="utcTime"></param>
         /// <param name="phi">The distance (in degrees) along the terminator from a particular one of its intersections with the equator, in degrees</param>

@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using OxyPlot.Series;
 
 namespace OxyPlot
 {
@@ -99,6 +100,25 @@ namespace OxyPlot
             longitude = (x / n * 360.0) - 180.0;
             double lat = Math.Atan(Math.Sinh(Math.PI * (1 - (2 * y / n))));
             latitude = lat * 180.0 / Math.PI;
+        }
+
+        /// <summary>
+        /// Transforms a tile coordinate (x,y) to a position.
+        /// </summary>
+        /// <para>
+        /// <see href="http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames"/>
+        /// </para>
+        /// <param name="x">The x</param>
+        /// <param name="y">The y</param>
+        /// <param name="zoom">The zoom</param>
+        public static MapPoint TileToLatLon(double x, double y, int zoom)
+        {
+            int n = 1 << zoom;
+            return new MapPoint()
+            {
+                Latitude = Math.Atan(Math.Sinh(Math.PI * (1 - (2 * y / n)))) * 180.0 / Math.PI,
+                Longitude = (x / n * 360.0) - 180.0
+            };
         }
 
         /// <summary>
@@ -232,6 +252,4 @@ namespace OxyPlot
             return path;
         }
     }
-
-
 }
