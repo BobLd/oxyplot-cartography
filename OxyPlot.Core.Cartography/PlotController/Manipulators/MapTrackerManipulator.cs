@@ -6,8 +6,6 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using OxyPlot.Legends;
-
 namespace OxyPlot
 {
     /// <summary>
@@ -67,7 +65,7 @@ namespace OxyPlot
         /// <summary>
         /// Occurs when the input device changes position during a manipulation.
         /// </summary>
-        /// <param name="e">The <see cref="OxyPlot.OxyMouseEventArgs" /> instance containing the event data.</param>
+        /// <param name="e">The <see cref="OxyMouseEventArgs" /> instance containing the event data.</param>
         public override void Delta(OxyMouseEventArgs e)
         {
             base.Delta(e);
@@ -127,7 +125,7 @@ namespace OxyPlot
         /// <summary>
         /// Occurs when an input device begins a manipulation on the plot.
         /// </summary>
-        /// <param name="e">The <see cref="OxyPlot.OxyMouseEventArgs" /> instance containing the event data.</param>
+        /// <param name="e">The <see cref="OxyMouseEventArgs" /> instance containing the event data.</param>
         public override void Started(OxyMouseEventArgs e)
         {
             base.Started(e);

@@ -3,7 +3,7 @@
 namespace OxyPlot
 {
     /// <summary>
-    /// Provides functionalities useful with cartography and maps
+    /// Provides functionalities useful with cartography and maps.
     /// </summary>
     public static class CartographyHelper
     {
@@ -28,28 +28,28 @@ namespace OxyPlot
         public const double MaxLongitude = 180;
 
         /// <summary>
-        /// Y to Latitude.
+        /// Spherical Pseudo-Mercator projection. Y to Latitude.
         /// <para>
         /// <see href="https://wiki.openstreetmap.org/wiki/Mercator#C#"/>
         /// </para>
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double YToLatitude(double y)
+        public static double PseudoMercatorProjectionYToLatitude(double y)
         {
-            return (Math.Atan(Math.Exp(y / 180 * Math.PI)) / Math.PI * 360) - 90;
+            return (Math.Atan(Math.Exp(y / 180.0 * Math.PI)) / Math.PI * 360.0) - 90.0;
         }
 
         /// <summary>
-        /// Latitude to Y.
+        /// Spherical Pseudo-Mercator projection. Latitude to Y.
         /// <para>
         /// <see href="https://wiki.openstreetmap.org/wiki/Mercator#C#"/>
         /// </para>
         /// </summary>
         /// <param name="latitude">Latitude, in degrees</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double LatitudeToY(double latitude)
+        public static double PseudoMercatorProjectionLatitudeToY(double latitude)
         {
-            return Math.Log(Math.Tan((latitude + 90) / 360 * Math.PI)) / Math.PI * 180;
+            return Math.Log(Math.Tan((latitude + 90.0) / 360.0 * Math.PI)) / Math.PI * 180.0;
         }
 
         /// <summary>

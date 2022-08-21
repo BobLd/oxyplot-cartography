@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using Avalonia;
 using Avalonia.Media.Imaging;
@@ -80,6 +81,7 @@ namespace SimpleDemo.ViewModels
                 //LabelFormatter = (decDegrees) => CartographyHelper.DecimalDegreesToDegreesMinutesSeconds(decDegrees, true, 3)
             });
 
+            // Map image
             MapTileApi standardApi = CartographyHelper.Apis.OpenStreetMap.Standard;
             var tileMapImageProvider = new HttpTileMapImageProvider(SynchronizationContext.Current!)
             {
@@ -121,8 +123,57 @@ namespace SimpleDemo.ViewModels
                     CopyrightNotice = standardApi.CopyrightNotice,
                     MinZoomLevel = 0,
                     MaxZoomLevel = 19, // max OpenStreetMap value
-                    IsTileGridVisible = true,
+                    //IsTileGridVisible = true,
                     TileGridThickness = 3,
+                    EdgeRenderingMode = EdgeRenderingMode.PreferSharpness,
+                    // Layer Wrong documentation in base class
+                });
+            }
+
+            // Satellite image
+            MapTileApi arcGISWorldImagery = CartographyHelper.Apis.ArcGIS.WorldImagery;
+            var tileSatImageProvider = new HttpTileMapImageProvider(SynchronizationContext.Current!)
+            {
+                Url = arcGISWorldImagery.Url,
+                MaxNumberOfDownloads = 2,
+                UserAgent = "OxyPlot.Cartography",
+                ImageConverter = new Func<byte[], byte[]>(bytes =>
+                {
+                    // https://github.com/oxyplot/oxyplot/blob/205e968870c292ecaeab2cb9e7f34904897126cb/Source/OxyPlot/Imaging/OxyImage.cs#L221
+                    if (bytes.Length >= 2 && bytes[0] == 0x42 && bytes[1] == 0x4D)
+                    {
+                        return bytes; // Bmp
+                    }
+
+                    if (bytes.Length >= 4 && bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47)
+                    {
+                        return bytes; //Png
+                    }
+
+                    using (var msInput = new MemoryStream(bytes))
+                    using (var msOutput = new MemoryStream())
+                    {
+                        var bitmap = Bitmap.DecodeToWidth(msInput, 256);
+                        bitmap.Save(msOutput);
+                        return msOutput.ToArray();
+                    }
+                })
+            };
+
+            using (var streamImg = asset.Open(loadingImg))
+            {
+                // Add the tile map annotation
+                model.Annotations.Add(new MapTileAnnotation(streamImg, tileSatImageProvider)
+                {
+                    Title = arcGISWorldImagery.Name,
+                    AnnotationGroupName = "Background",
+                    CopyrightNotice = arcGISWorldImagery.CopyrightNotice,
+                    MinZoomLevel = 0,
+                    MaxZoomLevel = 19, // max OpenStreetMap value
+                    //IsTileGridVisible = true,
+                    TileGridThickness = 3,
+                    IsVisible = false,
+                    Layer = AnnotationLayer.BelowSeries
                     // Layer Wrong documentation in base class
                 });
             }
@@ -215,6 +266,28 @@ namespace SimpleDemo.ViewModels
             }
 
             model.Series.Add(scatterSeries3);
+
+            model.Series.Add(new TerminatorHeatMapSeries());
+
+            var phis = ArrayBuilder.CreateVector(-125, 200 , 0.5); //-180 + 65, 180 + 64.5, 0.5,
+            var terminatorLatLon = phis.Select(phi => TerminatorHeatMapSeries.ComputeTerminator(DateTime.UtcNow, phi));
+            var terminatorSeries = new AreaSeries()
+            {
+                Title = "terminator area",
+                ConstantY2 = -85
+            };
+
+            foreach (var latLon in terminatorLatLon)
+            {
+                terminatorSeries.Points.Add(new DataPoint(latLon.L, -latLon.B));
+            }
+
+            model.Series.Add(terminatorSeries);
+
+            //var contourSeries = new ContourSeries()
+            //{
+            //    Data = terminatorLatLon.Select(lb => new double[] { lb.L, lb.B }).ToArray(),
+            //};
 
             return model;
         }

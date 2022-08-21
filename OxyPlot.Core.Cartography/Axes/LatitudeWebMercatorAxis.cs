@@ -37,7 +37,7 @@
         }
 
         /// <summary>
-        /// Updates the <see cref="ActualMaximum"/> and <see cref="ActualMinimum"/> values.
+        /// Updates the <see cref="Axis.ActualMaximum"/> and <see cref="Axis.ActualMinimum"/> values.
         /// </summary>
         /// <remarks>If the user has zoomed/panned the axis, the internal ViewMaximum/ViewMinimum
         /// values will be used. If Maximum or Minimum have been set, these values will be used. Otherwise the maximum and minimum values
@@ -50,7 +50,7 @@
         /// <summary>
         /// Determines whether the axis is used for X/Y values.
         /// </summary>
-        /// <returns><c>true</c> if it is an XY axis; otherwise, <c>false</c> .</returns>
+        /// <returns><c>true</c> if it is an XY axis; otherwise, <c>false</c>.</returns>
         public override bool IsXyAxis()
         {
             return true;
@@ -59,7 +59,7 @@
         /// <summary>
         /// Determines whether the axis is logarithmic.
         /// </summary>
-        /// <returns><c>true</c> if it is a logarithmic axis; otherwise, <c>false</c> .</returns>
+        /// <returns><c>true</c> if it is a logarithmic axis; otherwise, <c>false</c>.</returns>
         public override bool IsLogarithmic()
         {
             return false;
@@ -155,7 +155,7 @@
         /// <returns>The value.</returns>
         public override double InverseTransform(double sx)
         {
-            return CartographyHelper.YToLatitude((sx / Scale) + Offset);
+            return CartographyHelper.PseudoMercatorProjectionYToLatitude((sx / Scale) + Offset);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@
         /// <returns>The transformed value (screen coordinate).</returns>
         public override double Transform(double x)
         {
-            return (CartographyHelper.LatitudeToY(x) - Offset) * Scale;
+            return (CartographyHelper.PseudoMercatorProjectionLatitudeToY(x) - Offset) * Scale;
         }
 
         /// <summary>
@@ -175,7 +175,7 @@
         /// <returns>The transformed value.</returns>
         protected override double PostInverseTransform(double x)
         {
-            return CartographyHelper.YToLatitude(x);
+            return CartographyHelper.PseudoMercatorProjectionYToLatitude(x);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@
         /// <returns>The transformed value.</returns>
         protected override double PreTransform(double x)
         {
-            return CartographyHelper.LatitudeToY(x);
+            return CartographyHelper.PseudoMercatorProjectionLatitudeToY(x);
         }
 
         /// <inheritdoc/>

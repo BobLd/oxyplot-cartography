@@ -12,6 +12,9 @@ namespace OxyPlot.Annotations
 {
     /// <summary>
     /// Provides an annotation that shows a tile based map.
+    /// <para>
+    /// Sets the defaults <see cref="Annotation.Layer"/> to <see cref="AnnotationLayer.BelowAxes"/>.
+    /// </para>
     /// </summary>
     /// <remarks>The longitude and latitude range of the map is defined by the range of the x and y axis, respectively.</remarks>
     public class MapTileAnnotation : Annotation, IMapTileAnnotation
@@ -21,7 +24,10 @@ namespace OxyPlot.Annotations
         private readonly OxyImage? _loadingImg;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapTileAnnotation" /> class.
+        /// Initializes a new instance of the <see cref="MapTileAnnotation"/> class.
+        /// <para>
+        /// Sets the defaults <see cref="Annotation.Layer"/> to <see cref="AnnotationLayer.BelowAxes"/>.
+        /// </para>
         /// </summary>
         /// <param name="loadingImage">The image to display when loading the tiles.</param>
         /// <param name="tileMapImageProvider"></param>
@@ -32,7 +38,10 @@ namespace OxyPlot.Annotations
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapTileAnnotation" /> class.
+        /// Initializes a new instance of the <see cref="MapTileAnnotation"/> class.
+        /// <para>
+        /// Sets the defaults <see cref="Annotation.Layer"/> to <see cref="AnnotationLayer.BelowAxes"/>.
+        /// </para>
         /// </summary>
         /// <param name="loadingImage">The image to display when loading the tiles.</param>
         /// <param name="tileMapImageProvider"></param>
@@ -43,7 +52,10 @@ namespace OxyPlot.Annotations
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapTileAnnotation" /> class.
+        /// Initializes a new instance of the <see cref="MapTileAnnotation"/> class.
+        /// <para>
+        /// Sets the defaults <see cref="Annotation.Layer"/> to <see cref="AnnotationLayer.BelowAxes"/>.
+        /// </para>
         /// </summary>
         /// <param name="tileMapImageProvider"></param>
         public MapTileAnnotation(ITileMapImageProvider tileMapImageProvider)
@@ -61,11 +73,7 @@ namespace OxyPlot.Annotations
                 }
             };
 
-            Layer = AnnotationLayer.BelowSeries;
-            TileSize = 256;
-            MinZoomLevel = 0;
-            MaxZoomLevel = 20;
-            Opacity = 1.0;
+            base.Layer = AnnotationLayer.BelowSeries;
         }
 
         /// <summary>
@@ -86,17 +94,25 @@ namespace OxyPlot.Annotations
         /// <inheritdoc/>
         public string? CopyrightNotice { get; set; }
 
-        /// <inheritdoc/>
-        public int TileSize { get; set; }
+        /// <summary>
+        /// <inheritdoc/> The default is <c>256</c>.
+        /// </summary>
+        public int TileSize { get; set; } = 256;
 
-        /// <inheritdoc/>
-        public int MinZoomLevel { get; set; }
+        /// <summary>
+        /// <inheritdoc/> The default is <c>0</c>.
+        /// </summary>
+        public int MinZoomLevel { get; set; } = 0;
 
-        /// <inheritdoc/>
-        public int MaxZoomLevel { get; set; }
+        /// <summary>
+        /// <inheritdoc/> The default is <c>20</c>.
+        /// </summary>
+        public int MaxZoomLevel { get; set; } = 20;
 
-        /// <inheritdoc/>
-        public double Opacity { get; set; }
+        /// <summary>
+        /// <inheritdoc/> The default is <c>1</c>.
+        /// </summary>
+        public double Opacity { get; set; } = 1.0;
 
         /// <summary>
         /// <inheritdoc/> The default is null.
@@ -218,7 +234,7 @@ namespace OxyPlot.Annotations
             RenderCopyrightNotice(rc);
 
             // Draw the map scale
-            RenderMapScale(rc);
+            RenderMapScale(rc, zoom, lat0);
         }
 
         /// <summary>
@@ -248,17 +264,59 @@ namespace OxyPlot.Annotations
         {
             if (!string.IsNullOrEmpty(CopyrightNotice))
             {
+                OxyColor background = OxyColor.FromAColor(150, OxyColors.White);
                 var clippingRectangle = GetClippingRect();
-                var p = new ScreenPoint(clippingRectangle.Right - 5, clippingRectangle.Bottom - 5);
-                _ = rc.MeasureText(CopyrightNotice, ActualFont, ActualFontSize, ActualFontWeight); // TODO - Is this necessary?
-                rc.DrawText(p, CopyrightNotice, OxyColors.Black, ActualFont, ActualFontSize, ActualFontWeight,
-                            0, HorizontalAlignment.Right, VerticalAlignment.Bottom);
+                var p1 = new ScreenPoint(clippingRectangle.Right - 5, clippingRectangle.Bottom - 5);
+                var size = rc.MeasureText(CopyrightNotice, ActualFont, ActualFontSize, ActualFontWeight);
+                var p0 = new ScreenPoint(p1.X - size.Width, p1.Y - size.Height);
+                rc.DrawRectangle(new OxyRect(p0, p1), background, background, 2, EdgeRenderingMode);
+                rc.DrawText(p1, CopyrightNotice, OxyColors.Black, ActualFont, ActualFontSize, ActualFontWeight, 0,
+                    HorizontalAlignment.Right, VerticalAlignment.Bottom, size);
             }
         }
 
-        private void RenderMapScale(IRenderContext rc)
+        private void RenderMapScale(IRenderContext rc, int zoom, double latitude)
         {
-            // TODO - Draw scale (1km = xx..)
+            /*
+             * zoom	scale (km)	scale (mi)
+                0	3000	    2000 mi
+                2	1000	    500 mi
+                4	500	        300 mi
+                6	100	        100 mi
+                8	30	        20 mi
+                10	10	        5 mi
+                12	2	        1 mi
+                14	0.5	        2000 ft
+                16	0.1	        500 ft
+                18	0.03	    100 ft
+                20	0.01	    50 ft
+             */
+
+            // Transform from tile coordinates to lat/lon
+            CartographyHelper.TileToLatLon(0, 0, zoom, out double latitude0, out double longitude0);
+            CartographyHelper.TileToLatLon(1, 1, zoom, out double latitude1, out double longitude1);
+
+            // Transform from lat/lon to screen coordinates
+            var s00 = this.Transform(longitude0, latitude0);
+            var s11 = this.Transform(longitude1, latitude1);
+
+            double actualTileWidth = s11.X - s00.X;
+
+            // https://wiki.openstreetmap.org/wiki/Zoom_levels
+            // The horizontal distance represented by each square tile,
+            // measured along the parallel at a given latitude, is given by:
+            double C = 2.0 * Math.PI * 6_378_137.0;// The equatorial circumference of the Earth
+            double S_tile = C * Math.Cos(latitude * Math.PI / 180.0) / Math.Pow(2, zoom);
+            //double S_pixel_256 = S_tile  / 256.0;
+            double S_pixel = S_tile / actualTileWidth;
+
+            string scale = $"z={zoom} m/pixel={S_pixel:0.000} tile width={actualTileWidth:0.0}";
+
+            var clippingRectangle = GetClippingRect();
+            var p = new ScreenPoint(clippingRectangle.Right - 5, clippingRectangle.Bottom - 17);
+            _ = rc.MeasureText(scale, ActualFont, ActualFontSize, ActualFontWeight); // TODO - Is this necessary?
+            rc.DrawText(p, scale, OxyColors.Black, ActualFont, ActualFontSize, ActualFontWeight,
+                        0, HorizontalAlignment.Right, VerticalAlignment.Bottom);
         }
 
         private OxyImage? GetImage(int x, int y, int zoom)
