@@ -219,6 +219,7 @@ namespace SimpleDemo.ViewModels
                 MaxZoomLevel = 19, // max OpenStreetMap value
             });
 
+            /*
             ScatterSeries scatterSeries = new ScatterSeries()
             {
                 Title = "Some data",
@@ -264,30 +265,44 @@ namespace SimpleDemo.ViewModels
                     scatterSeries3.Points.Add(new ScatterPoint(x / 10.0, y / 10.0));
                 }
             }
-
+            
             model.Series.Add(scatterSeries3);
+            */
 
             model.Series.Add(new TerminatorHeatMapSeries());
 
-            var phis = ArrayBuilder.CreateVector(-125, 200 , 0.5); //-180 + 65, 180 + 64.5, 0.5,
-            var terminatorLatLon = phis.Select(phi => TerminatorHeatMapSeries.ComputeTerminator(DateTime.UtcNow, phi));
-            var terminatorSeries = new AreaSeries()
+            var phis = ArrayBuilder.CreateVector(-180, 180, 0.5); //-180 + 65, 180 + 64.5, 0.5,
+            var terminatorLatLon = phis.Select(phi => CartographyHelper.ComputeTerminator2(DateTime.UtcNow, phi));
+            var terminatorSeries = new LineSeries()
             {
                 Title = "terminator area",
-                ConstantY2 = -85
+                //ConstantY2 = -85
             };
 
             foreach (var latLon in terminatorLatLon)
             {
-                terminatorSeries.Points.Add(new DataPoint(latLon.L, -latLon.B));
+                terminatorSeries.Points.Add(latLon.ToDataPoint());
             }
 
             model.Series.Add(terminatorSeries);
 
-            //var contourSeries = new ContourSeries()
-            //{
-            //    Data = terminatorLatLon.Select(lb => new double[] { lb.L, lb.B }).ToArray(),
-            //};
+            var sunPosition = CartographyHelper.ComputeSunStraightUpPoint(DateTime.UtcNow);
+            model.Annotations.Add(new PointAnnotation()
+            {
+                X = sunPosition.Longitude,
+                Y = sunPosition.Latitude,
+                Size = 10,
+                Fill = OxyColors.Red
+            });
+
+            var sunPosition2 = CartographyHelper.ComputeSunStraightUpPoint2(DateTime.UtcNow);
+            model.Annotations.Add(new PointAnnotation()
+            {
+                X = sunPosition2.Longitude,
+                Y = sunPosition2.Latitude,
+                Size = 10,
+                Fill = OxyColors.Yellow
+            });
 
             return model;
         }

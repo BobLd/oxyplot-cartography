@@ -12,6 +12,9 @@ namespace OxyPlot.Series
     // https://math.stackexchange.com/questions/947718/how-to-calculate-civil-twilight-timings
     // http://www.stargazing.net/kepler/sunrise.html
     // https://www.maplesoft.com/support/help/Maple/view.aspx?path=MathApps/DayAndNightTerminator&cid=926
+    // https://aviation.stackexchange.com/questions/90380/what-are-these-3-stages-of-twilight
+    // https://www.timeanddate.com/worldclock/sunearth.html
+    // http://www.stjarnhimlen.se/comp/riset.html
     public class TerminatorHeatMapSeries : FunctionSeries
     {
         private DateTime _utcNow;

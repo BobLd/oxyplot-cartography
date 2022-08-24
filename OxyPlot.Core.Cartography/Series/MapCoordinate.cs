@@ -3,18 +3,18 @@
 namespace OxyPlot.Series
 {
     /// <summary>
-    /// Represents a point on point on a map, defined by its <see cref="Latitude"/>, <see cref="Longitude"/>
+    /// Represents a point on a map, defined by its <see cref="Latitude"/>, <see cref="Longitude"/>
     /// and its optional <see cref="Altitude"/>.
     /// </summary>
-    public struct MapPoint
+    public struct MapCoordinate
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapPoint"/> struct.
+        /// Initializes a new instance of the <see cref="MapCoordinate"/> struct.
         /// <para>
-        /// The latitude and longitude will be set to <see cref="double.NaN"/>, the altitude to null.
+        /// <see cref="Latitude"/> and <see cref="Longitude"/> will be set to <see cref="double.NaN"/>, <see cref="Altitude"/> to null.
         /// </para>
         /// </summary>
-        public MapPoint()
+        public MapCoordinate()
         {
             Latitude = double.NaN;
             Longitude = double.NaN;
@@ -22,14 +22,14 @@ namespace OxyPlot.Series
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapPoint"/> struct.
+        /// Initializes a new instance of the <see cref="MapCoordinate"/> struct.
         /// <para>
-        /// The altitude will be set to null.
+        /// <see cref="Altitude"/> will be set to null.
         /// </para>
         /// </summary>
         /// <param name="latitude">The latitude (Y coordinate)</param>
         /// <param name="longitude">The longitude (X coordinate)</param>
-        public MapPoint(double latitude, double longitude)
+        public MapCoordinate(double latitude, double longitude)
         {
             Latitude = latitude;
             Longitude = longitude;
@@ -37,12 +37,12 @@ namespace OxyPlot.Series
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapPoint"/> struct.
+        /// Initializes a new instance of the <see cref="MapCoordinate"/> struct.
         /// </summary>
         /// <param name="latitude">The latitude (Y coordinate)</param>
         /// <param name="longitude">The longitude (X coordinate)</param>
         /// <param name="altitude">The altitude (Z coordinate)</param>
-        public MapPoint(double latitude, double longitude, double altitude)
+        public MapCoordinate(double latitude, double longitude, double altitude)
         {
             Latitude = latitude;
             Longitude = longitude;
@@ -76,7 +76,7 @@ namespace OxyPlot.Series
         /// <inheritdoc/>
         public override bool Equals([NotNullWhen(true)] object? obj)
         {
-            if (obj is MapPoint point)
+            if (obj is MapCoordinate point)
             {
                 return Latitude.Equals(point.Latitude) &&
                        Longitude.Equals(point.Longitude) &&
@@ -109,13 +109,13 @@ namespace OxyPlot.Series
         }
 
         /// <inheritdoc/>
-        public static bool operator ==(MapPoint left, MapPoint right)
+        public static bool operator ==(MapCoordinate left, MapCoordinate right)
         {
             return left.Equals(right);
         }
 
         /// <inheritdoc/>
-        public static bool operator !=(MapPoint left, MapPoint right)
+        public static bool operator !=(MapCoordinate left, MapCoordinate right)
         {
             return !(left == right);
         }
