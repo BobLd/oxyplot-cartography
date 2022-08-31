@@ -88,6 +88,21 @@ namespace OxyPlot
         }
 
         /// <summary>
+        /// Transforms a position to a tile coordinate (x,y).
+        /// <para>
+        /// See <see href="http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames"/>
+        /// </para>
+        /// </summary>
+        /// <param name="coordinate">The map coordinate</param>
+        /// <param name="zoom">The zoom</param>
+        /// <param name="x">The x</param>
+        /// <param name="y">The y</param>
+        public static void LatLonToTile(MapCoordinate coordinate, int zoom, out double x, out double y)
+        {
+            LatLonToTile(coordinate.Latitude, coordinate.Longitude, zoom, out x, out y);
+        }
+
+        /// <summary>
         /// Transforms a tile coordinate (x,y) to a position.
         /// </summary>
         /// <para>
@@ -155,7 +170,7 @@ namespace OxyPlot
         /// <param name="degrees"></param>
         /// <param name="minutes"></param>
         /// <param name="seconds"></param>
-        /// <param name="cardinal"></param>
+        /// <param name="cardinal">N, S, E or W</param>
         /// <returns>The decimal degrees (DD) coordinates</returns>
         /// <exception cref="ArgumentException"></exception>
         public static double DegreesMinutesSecondsToDecimalDegrees(int degrees, int minutes, double seconds, char cardinal)
@@ -258,7 +273,7 @@ namespace OxyPlot
         /// Gets the <see cref="DataPoint"/> with X coordinate being the longitude and Y coordinate beeing the latitude.
         /// </summary>
         /// <param name="coordinate"></param>
-        /// <returns>The corresponding <see cref="DataPoint"/></returns>
+        /// <returns>The corresponding <see cref="DataPoint"/> with X coordinate being the longitude and Y coordinate beeing the latitude</returns>
         public static DataPoint ToDataPoint(this MapCoordinate coordinate)
         {
             return new DataPoint(coordinate.Longitude, coordinate.Latitude);
