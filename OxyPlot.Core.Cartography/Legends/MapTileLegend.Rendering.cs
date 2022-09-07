@@ -195,10 +195,10 @@ namespace OxyPlot.Legends
         }
 
         /// <summary>
-        /// Renders the legend for the specified series.
+        /// Renders the legend for the specified <see cref="IMapTileAnnotation"/>.
         /// </summary>
         /// <param name="rc">The render context.</param>
-        /// <param name="s">The series.</param>
+        /// <param name="s">The map tile annotation.</param>
         /// <param name="rect">The position and size of the legend.</param>
         private void RenderLegend(IRenderContext rc, IMapTileAnnotation s, OxyRect rect)
         {
@@ -255,7 +255,7 @@ namespace OxyPlot.Legends
                 maxsize,
                 true);
 
-            this.SeriesPosMap.Add(s, new OxyRect(new ScreenPoint(x, y), textSize));
+            this.MapTileAnnotationPosMap.Add(s, new OxyRect(new ScreenPoint(x, y), textSize));
             double x0 = x;
             switch (actualItemAlignment)
             {
@@ -369,8 +369,6 @@ namespace OxyPlot.Legends
             // the maximum item with in the column being rendered (only used for vertical orientation)
             double maxItemWidth = 0;
 
-            // TODO - Get annotation, not series
-
             var mapTileAnnotations = this.PlotModel.Annotations.OfType<IMapTileAnnotation>();
             var items = this.LegendItemOrder == LegendItemOrder.Reverse ? mapTileAnnotations.Reverse() : mapTileAnnotations;
 
@@ -383,24 +381,25 @@ namespace OxyPlot.Legends
                 }
             }
 
-            // Clear the series position map.
-            this.SeriesPosMap.Clear();
+            // Clear the map tile annotations position map.
+            this.MapTileAnnotationPosMap.Clear();
 
             // When orientation is vertical and alignment is center or right, the items cannot be rendered before
             // the max item width has been calculated. Render the items for each column, and at the end.
-            var seriesToRender = new Dictionary<IMapTileAnnotation, OxyRect>();
+            var mapTileAnnotationsToRender = new Dictionary<IMapTileAnnotation, OxyRect>();
             void renderItems()
             {
                 var usedGroupNames = new List<string>();
-                foreach (var sr in seriesToRender)
+                foreach (var sr in mapTileAnnotationsToRender)
                 {
                     var itemRect = sr.Value;
-                    var itemSeries = sr.Key;
+                    var itemMapTileAnnotation = sr.Key;
 
-                    if (!string.IsNullOrEmpty(itemSeries.AnnotationGroupName) && !usedGroupNames.Contains(itemSeries.AnnotationGroupName))
+                    if (!string.IsNullOrEmpty(itemMapTileAnnotation.AnnotationGroupName) && !usedGroupNames.Contains(itemMapTileAnnotation.AnnotationGroupName))
                     {
-                        usedGroupNames.Add(itemSeries.AnnotationGroupName);
-                        var groupNameTextSize = rc.MeasureMathText(itemSeries.AnnotationGroupName, this.GroupNameFont ?? this.PlotModel.DefaultFont, actualGroupNameFontSize, this.GroupNameFontWeight);
+                        usedGroupNames.Add(itemMapTileAnnotation.AnnotationGroupName);
+                        var groupNameTextSize = rc.MeasureMathText(itemMapTileAnnotation.AnnotationGroupName, this.GroupNameFont ?? this.PlotModel.DefaultFont,
+                                                                   actualGroupNameFontSize, this.GroupNameFontWeight);
                         double ypos = itemRect.Top;
                         double xpos = itemRect.Left;
                         if (this.LegendOrientation == LegendOrientation.Vertical)
@@ -413,7 +412,7 @@ namespace OxyPlot.Legends
                         }
                         rc.DrawMathText(
                         new ScreenPoint(xpos, ypos),
-                        itemSeries.AnnotationGroupName,
+                        itemMapTileAnnotation.AnnotationGroupName,
                         this.LegendTitleColor.GetActualColor(this.PlotModel.TextColor),
                          this.GroupNameFont ?? this.PlotModel.DefaultFont,
                         actualGroupNameFontSize,
@@ -439,11 +438,11 @@ namespace OxyPlot.Legends
 
                     var r = new OxyRect(itemRect.Left, itemRect.Top, Math.Max(rwidth, 0), Math.Max(rheight, 0));
 
-                    this.RenderLegend(rc, itemSeries, r);
+                    this.RenderLegend(rc, itemMapTileAnnotation, r);
                 }
 
                 usedGroupNames.Clear();
-                seriesToRender.Clear();
+                mapTileAnnotationsToRender.Clear();
             }
 
             if (!measureOnly)
@@ -471,13 +470,13 @@ namespace OxyPlot.Legends
                 int count = 0;
                 foreach (var s in itemGroup)
                 {
-                    // Skip series with empty title
+                    // Skip map tile annotation with empty title
                     if (string.IsNullOrEmpty(s.Title) || !s.RenderInLegend)
                     {
                         continue;
                     }
 
-                    // Skip invisible series if we are not configured to show them
+                    // Skip invisible map tile annotation if we are not configured to show them
                     if (!s.IsVisible && !this.ShowInvisibleSeries)
                     {
                         continue;
@@ -511,7 +510,7 @@ namespace OxyPlot.Legends
 
                         if (!measureOnly)
                         {
-                            seriesToRender.Add(s, new OxyRect(rect.Left + x, rect.Top + y, itemWidth, itemHeight));
+                            mapTileAnnotationsToRender.Add(s, new OxyRect(rect.Left + x, rect.Top + y, itemWidth, itemHeight));
                         }
 
                         x += itemWidth;
@@ -533,7 +532,7 @@ namespace OxyPlot.Legends
 
                         if (!measureOnly)
                         {
-                            seriesToRender.Add(s, new OxyRect(rect.Left + x, rect.Top + y, itemWidth, itemHeight));
+                            mapTileAnnotationsToRender.Add(s, new OxyRect(rect.Left + x, rect.Top + y, itemWidth, itemHeight));
                         }
 
                         y += itemHeight + this.LegendLineSpacing;

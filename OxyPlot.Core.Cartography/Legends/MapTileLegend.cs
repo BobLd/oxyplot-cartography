@@ -55,7 +55,7 @@ namespace OxyPlot.Legends
 
             this.AnnotationsInvisibleTextColor = OxyColor.FromAColor(64, this.LegendTextColor);
 
-            this.SeriesPosMap = new Dictionary<IMapTileAnnotation, OxyRect>();
+            this.MapTileAnnotationPosMap = new Dictionary<IMapTileAnnotation, OxyRect>();
 
             this.Selectable = true;
             this.SelectionMode = SelectionMode.Single;
@@ -69,9 +69,9 @@ namespace OxyPlot.Legends
         protected override HitTestResult? LegendHitTest(HitTestArguments args)
         {
             ScreenPoint point = args.Point;
-            if (this.IsPointInLegend(point) && this.SeriesPosMap?.Count > 0)
+            if (this.IsPointInLegend(point) && this.MapTileAnnotationPosMap?.Count > 0)
             {
-                foreach (KeyValuePair<IMapTileAnnotation, OxyRect> kvp in this.SeriesPosMap)
+                foreach (KeyValuePair<IMapTileAnnotation, OxyRect> kvp in this.MapTileAnnotationPosMap)
                 {
                     if (kvp.Value.Contains(point) && this.ShowInvisibleSeries)
                     {
@@ -100,7 +100,7 @@ namespace OxyPlot.Legends
         /// </summary>
         public double GroupNameFontWeight { get; set; }
 
-        private Dictionary<IMapTileAnnotation, OxyRect> SeriesPosMap { get; set; }
+        private Dictionary<IMapTileAnnotation, OxyRect> MapTileAnnotationPosMap { get; set; }
 
         /// <summary>
         /// Gets or sets the textcolor of invisible annotations.

@@ -68,9 +68,19 @@
         bool RenderInLegend { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the map scale is visible.
+        /// </summary>
+        bool IsMapScaleVisible { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this map tile annotation is visible.
         /// </summary>
         bool IsVisible { get; set; }
+
+        /// <summary>
+        /// Gets the current zoom level.
+        /// </summary>
+        int CurrentZoomLevel { get; }
 
         /// <summary>
         /// Renders the legend symbol for the map tile annotation on the specified rendering context.
@@ -78,5 +88,7 @@
         /// <param name="rc">The rendering context.</param>
         /// <param name="legendBox">The bounding rectangle of the legend box.</param>
         void RenderLegend(IRenderContext rc, OxyRect legendBox);
+
+        void AddScale(MapScaleBase scale);
     }
 }
