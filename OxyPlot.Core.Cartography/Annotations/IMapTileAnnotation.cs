@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface that defines annotation that shows a tile based map.
     /// </summary>
-    public interface IMapTileAnnotation
+    public interface IMapTileAnnotation : IXyAxisPlotElement
     {
         /// <summary>
         /// Gets or sets a value indicating whether the tile grid is visible.

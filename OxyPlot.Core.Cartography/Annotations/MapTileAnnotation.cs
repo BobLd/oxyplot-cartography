@@ -243,7 +243,7 @@ namespace OxyPlot.Annotations
             RenderCopyrightNotice(rc);
 
             // Draw the map scale
-            RenderMapScale(rc, zoom, lat0);
+            //RenderMapScale(rc, zoom, lat0);
         }
 
         /// <summary>

@@ -4,12 +4,12 @@
     {
         public static string FormatStringMeters(double meters)
         {
-            return meters > 1000 ? $"{meters / 1000:0} km" : $"{meters:0} m";
+            return meters >= 1000 ? $"{meters / 1000:0} km" : $"{meters:0} m";
         }
 
         public static string FormatStringFeet(double feet)
         {
-            return feet > 5280 ? $"{feet / 5280:0} mi" : $"{feet:0} ft";
+            return feet >= 5280 ? $"{feet / 5280:0} mi" : $"{feet:0} ft";
         }
 
         public static double RoundScale(double distance)

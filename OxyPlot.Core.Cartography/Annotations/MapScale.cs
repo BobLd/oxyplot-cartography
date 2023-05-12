@@ -54,15 +54,25 @@
             double scaleMeters = CartographyScaleHelper.RoundScale2And5(distanceMeters);
             double scaleMetersPixels = Math.Round(scaleMeters / S_pixel_m, 0);
 
-            //string scale = $"z={zoom}, m/pixel={S_pixel:0.000}, tile width={actualTileWidth:0.0}, legend stick={rounded}m ({roundedPixels}px)";
-
             if (scaleMetersPixels > 2.5 * scaleSizePixel)
             {
                 // We don't render legend if too big (too much zoom)
                 return;
             }
 
-            double scaleFeet = CartographyScaleHelper.RoundScale2And5(CartographyHelper.MetersToFeet(distanceMeters));
+            double scaleMetterInFeet = CartographyHelper.MetersToFeet(distanceMeters);
+            double scaleFeet;
+
+            if (scaleMetterInFeet > 5280) // miles
+            {
+                double scaleMiles = scaleMetterInFeet / 5280;
+                scaleFeet = CartographyScaleHelper.RoundScale2And5(scaleMiles) * 5280;
+            }
+            else // feet
+            {
+                scaleFeet = CartographyScaleHelper.RoundScale2And5(scaleMetterInFeet);
+            }
+
             double scaleFeetPixels = Math.Round(CartographyHelper.FeetToMeters(scaleFeet) / S_pixel_m, 0);
 
             double mainScale = Math.Max(scaleMetersPixels, scaleFeetPixels);

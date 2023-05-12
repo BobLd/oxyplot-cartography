@@ -63,6 +63,16 @@ namespace SimpleDemo.ViewModels
                 IsLegendVisible = true
             });
 
+            model.Legends.Add(new MapScaleLegend
+            {
+                LegendTitle = "Layers",
+                LegendPlacement = LegendPlacement.Inside,
+                LegendPosition = LegendPosition.TopRight,
+                LegendBackground = OxyColor.FromAColor(200, OxyColors.White),
+                LegendBorder = OxyColors.Black,
+                IsLegendVisible = true
+            });
+
             model.Axes.Add(new LongitudeAxis
             {
                 Position = AxisPosition.Bottom,
@@ -85,7 +95,8 @@ namespace SimpleDemo.ViewModels
             MapTileApi standardApi = CartographyHelper.Apis.OpenStreetMap.Standard;
             var tileMapImageProvider = new HttpTileMapImageProvider(SynchronizationContext.Current!)
             {
-                Url = standardApi.Url,
+                Url = "https://gis2.london.gov.uk/server/rest/services/apps/Air_Quality_map_service_PM25_2019/MapServer/tile/{Z}/{Y}/{X}",
+                //Url = standardApi.Url,
                 MaxNumberOfDownloads = 2,
                 UserAgent = "OxyPlot.Cartography",
                 ImageConverter = new Func<byte[], byte[]>(bytes =>
@@ -128,7 +139,7 @@ namespace SimpleDemo.ViewModels
                     EdgeRenderingMode = EdgeRenderingMode.PreferSharpness,
                     // Layer Wrong documentation in base class
                 };
-                map.AddScale(new MapScale());
+                //map.AddScale(new MapScale());
                 model.Annotations.Add(map);
             }
 
@@ -211,6 +222,7 @@ namespace SimpleDemo.ViewModels
                 })
             };
 
+            /*
             // Add the tile map annotation
             model.Annotations.Add(new MapTileAnnotation(tileMapImageProvider2)
             {
@@ -220,6 +232,7 @@ namespace SimpleDemo.ViewModels
                 MinZoomLevel = 0,
                 MaxZoomLevel = 19, // max OpenStreetMap value
             });
+            */
 
             /*
             ScatterSeries scatterSeries = new ScatterSeries()

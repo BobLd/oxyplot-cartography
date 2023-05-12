@@ -143,6 +143,7 @@
         /// <param name="newScale"></param>
         public override void Zoom(double newScale)
         {
+            base.Zoom(newScale);
             // There is an issue when it's a Cartesian plot type
             // We don't do the zoom using this function
             // It seems there's no real impact appart from fixing the issue...
